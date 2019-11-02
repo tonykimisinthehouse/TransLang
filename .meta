@@ -1,3 +1,5 @@
 {
-  "projects": {}
+  "projects": {
+    "frontend": "git@github.com:TonyKimisintheHouse/TransLang-Frontend"
+  }
 }
