@@ -1,0 +1,16 @@
+def myFriends(oldfile, newfile): 
+    infile = open(oldfile, "r")
+    friends = infile.readlines()
+    infile.close()
+    
+    friends.sort()
+    
+    outfile = open(newfile, "w")
+    for friend in friends:
+        newFriend = friend.split(",")
+        if int(newFriend[-1]) < 30:
+            outfile.write(friend)
+    
+    outfile.close()
+
+myFriends("oldFriends.txt", "newFriends.txt")
