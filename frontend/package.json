@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "codemirror": "^5.49.2",
+    "firebase": "^7.2.3",
     "react": "^16.11.0",
     "react-codemirror2": "^6.0.0",
     "react-dom": "^16.11.0",
