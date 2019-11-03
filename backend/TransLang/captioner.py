@@ -10,7 +10,7 @@ If you want to change the microphone you will need to know the device id and use
 which is used to create the recognizer. You can read more about this in the docs.
 (https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-select-audio-input-devices?WT.mc_id=devto-blog-jabenn)
 """
-speech_config = azure_speech_sdk.SpeechConfig(subscription='e6cfa0e31bb244098f12b1ef3c1ed588', region='East US')
+speech_config = azure_speech_sdk.SpeechConfig(subscription=config.speech_key, region=config.service_region)
 speech_recognizer = azure_speech_sdk.SpeechRecognizer(speech_config=speech_config)
 
 
@@ -24,11 +24,13 @@ labelText = NONE
 
 def recognizing(args):
     global labelText
+    print("recognizing", args.result.text)
     labelText.set(args.result.text)
 
 
 def recognized(args):
     global f
+    print("recognized", args.result.text)
     if args.result.text.strip() != '':
         f.write(args.result.text + "\n")
 
@@ -58,7 +60,7 @@ label.pack(padx=padding, pady=padding)
 
 speech_config = azure_speech_sdk.SpeechConfig(subscription=config.speech_key, region=config.service_region)
 
-if config.device_uuid == "":
+if config.device_uuid is None:
     speech_recognizer = azure_speech_sdk.SpeechRecognizer(speech_config=speech_config)
 else:
     audio_config = azure_speech_sdk.AudioConfig(device_name=config.device_uuid);
