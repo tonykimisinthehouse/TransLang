@@ -4,6 +4,7 @@ Uses Azure cognitive services
 """
 
 from config import speech_key, service_region, device_uuid
+import time
 
 try:
     import azure.cognitiveservices.speech as speechsdk
@@ -43,7 +44,7 @@ class TransLangSpeech(object):
 
         self.counter = 1 """
     
-    def __init__(self, source_lang='', target_langs=[]):
+    def __init__(self, source_lang='en-US', target_langs=['es', 'zh-Hans']):
 
         # config settings
         self.source_lang = 'en-US'
@@ -71,12 +72,26 @@ class TransLangSpeech(object):
         # self.speech_recognizer.start_continuous_recognition()
 
         self.counter = 1
+
+        self.done = False
     
     def recognizeContinuous(self, fileName=None):
+        # connect callback functions to the events fired by the recognizer
+        self.speech_recognizer.session_started.connect(lambda evt: print('SESSION STARTED: {}'.format(evt)))
+        self.speech_recognizer.session_stopped.connect(lambda evt: print('SESSION STOPPED {}'.format(evt)))
+
         self.speech_recognizer.recognizing.connect(self.recognizing)
         self.speech_recognizer.recognized.connect(self.recognized)
 
+        self.speech_recognizer.canceled.connect(lambda evt: print('CANCELED: {} ({})'.format(evt, evt.reason)))
+
+        self.speech_recognizer.session_stopped.connect(self.stop_cb)
+        self.speech_recognizer.canceled.connect(self.stop_cb)
+
         self.speech_recognizer.start_continuous_recognition()
+
+        while not self.done:
+            time.sleep(0.5)
 
     def recognizeOnce(self, fileName=None):
         # TODO: config new self.speech_recognizer with new fileName
@@ -84,8 +99,8 @@ class TransLangSpeech(object):
         result = self.speech_recognizer.recognize_once()
         if result.reason == speechsdk.ResultReason.TranslatedSpeech:
             print("""Recognized: {}
-    Spanish translation: {}
-    Chinese translation: {}""".format(
+        Spanish translation: {}
+        Chinese translation: {}""".format(
                 result.text, result.translations['es'], result.translations['zh-Hans']))
         elif result.reason == speechsdk.ResultReason.RecognizedSpeech:
             print("Recognized: {}".format(result.text))
@@ -99,17 +114,18 @@ class TransLangSpeech(object):
     def recognizing(self, args):
         """Callback event while recognizing is in progress. Its recognizING"""
         # print("recognizing")
-        print(args.result.text)
+        # print(args.result.text)
 
     def recognized(self, args):
         """Callback event recognizing is done. Its recognizED"""
         # print("args",args)
+        # print("recognized")
         # print("Recognized: {}".format(args.result.text))
         # Check the result
         if args.result.reason == speechsdk.ResultReason.TranslatedSpeech:
             print("""Recognized: {}
-    German translation: {}
-    French translation: {}""".format(
+    Spanish translation: {}
+    Chinese translation: {}""".format(
                 args.result.text, args.result.translations['es'], args.result.translations['zh-Hans']))
         elif args.result.reason == speechsdk.ResultReason.RecognizedSpeech:
             print("Recognized: {}".format(args.result.text))
@@ -121,9 +137,15 @@ class TransLangSpeech(object):
                 print("Error details: {}".format(args.result.cancellation_details.error_details))
         
         self.counter += 1
+    
+    def stop_cb(self, evt):
+        """callback that stops continuous recognition upon receiving an event `evt`"""
+        print('CLOSING on {}'.format(evt))
+        self.speech_recognizer.stop_continuous_recognition()
+        self.done = True
 
 if __name__ == "__main__":
     translang = TransLangSpeech(source_lang='en-US')
     # translang.recognizeOnce()
-    translang.recognizeContinuous()
+    translang.recognizeContinuous() 
 
