@@ -5,16 +5,52 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+}
+
+.App-header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App {
+  margin: 0;
+  height: 100vh;
+  display:flex;
+  flex-direction:row;
 }
 
 .CodeMirrorContainer {
-  width: 80%;
+  width: 95%;
   margin: auto;
+  /* position: absolute; */
 }
 
 .OuterContainer {
-  width: 75%;
+  margin: 0;
+  height: 100%;
+  width: 60%;
   background: yellow;
+}
+
+.Transcript {
+  background: rgb(77, 77, 77);
+  color: white;
+  margin: 0;
+}
+
+.Resources {
+  background: rgb(228, 228, 228);
+}
+
+#topic-title {
+  background: rgb(77, 77, 77);
+  color: white;
 }
 
 /* code {
