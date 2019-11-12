@@ -6,7 +6,7 @@ require('codemirror/theme/material.css');
 require('codemirror/theme/neat.css');
 require('codemirror/mode/python/python.js');
 require('codemirror/addon/selection/active-line.js')
- 
+
 
 
 const options = {
@@ -15,20 +15,20 @@ const options = {
   styleActiveLine: true,
   lineNumbers: true,
   lineWrapping: true,
-  
+
   // readOnly: 'noCursor',
   gutters: ["CodeMirror-linenumbers", "breakpoints"]
 };
 
 function CodeMirrorComponent(props) {
-  let defaultValue = 
+  let defaultValue =
   `
   Spring-2015-Q3.txt
   `
 
   const [value, setValue] = useState(
     defaultValue);
-  const readOnly = props.readOnly;  
+  const readOnly = props.readOnly;
   if (readOnly) {
     options.readOnly = 'noCursor'
   }

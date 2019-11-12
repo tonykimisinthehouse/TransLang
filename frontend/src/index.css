@@ -7,6 +7,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.CodeMirrorContainer {
+  width: 80%;
+  margin: auto;
+}
+
+.OuterContainer {
+  width: 75%;
+  background: yellow;
+}
+
 /* code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
