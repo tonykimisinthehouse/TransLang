@@ -4,6 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 import FirebaseMirror from './component/FirebaseMirror';
 
+
 function App() {
   return (
     <div>
@@ -26,6 +27,7 @@ class CodeMirrorContainer extends React.Component {
 
     }
   }
+
   render() {
     // return <div className="Container">hello</div>;
     return (
