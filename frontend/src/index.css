@@ -16,13 +16,20 @@ body {
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  height: 5%;
 }
 
 .App {
   margin: 0;
   height: 100vh;
+  /* width: 100%; */
+  
+
+}
+.three-main-columns {
   display:flex;
   flex-direction:row;
+  height: 95%;
 }
 
 .CodeMirrorContainer {
@@ -35,6 +42,7 @@ body {
   margin: 0;
   height: 100%;
   width: 60%;
+  /* max- */
   background: yellow;
 }
 
@@ -42,10 +50,12 @@ body {
   background: rgb(77, 77, 77);
   color: white;
   margin: 0;
+  width: 20%;
 }
 
 .Resources {
   background: rgb(228, 228, 228);
+  width: 20%;
 }
 
 #topic-title {

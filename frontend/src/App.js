@@ -7,11 +7,13 @@ import FirebaseMirror from './component/FirebaseMirror';
 function App() {
   return (
     <div>
-      <header className="App-header"> Header</header>
       <div className="App">
-        <Resources/>
-        <CodeMirrorContainer/>
-        <Transcript/>
+        <header className="App-header">Header</header>
+        <div className="three-main-columns">
+          <Resources/>
+          <CodeMirrorContainer/>
+          <Transcript/>
+        </div>
       </div>
     </div>
   );
@@ -28,15 +30,15 @@ class CodeMirrorContainer extends React.Component {
     // return <div className="Container">hello</div>;
     return (
       <div className="OuterContainer">
-      <p id="topic-title">Topic title</p>
-      <div className="CodeMirrorContainer">
-        <h1>Problem instructions</h1>
-        <h3>Question prompt</h3>
-        <div>
-            <CodeMirrorComponent readOnly={false}/>
+        <p id="topic-title">Topic title</p>
+        <div className="CodeMirrorContainer">
+          <h1>Problem instructions</h1>
+          <h3>Question prompt</h3>
+          <div>
+              <CodeMirrorComponent readOnly={false}/>
+          </div>
+          <button>Next</button>
         </div>
-        <button>Next</button>
-      </div>
       </div>
     );
   }
