@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Firebase, { FirebaseContext } from './Firebase';
-import Firepad from 'firepad';
+// import Firepad from 'firepad';
 import CodeMirror from 'codemirror';
 
 class FirebaseMirror extends Component {
@@ -56,7 +56,7 @@ class FirebaseMirror extends Component {
     //     let firepadRef = this.getExampleRef();
     //     let codeMirrorRef = CodeMirror(document.getElementById('firepad-container'), { lineWrapping: true });
     //     let firepad = Firepad.fromCodeMirror(firepadRef, codeMirrorRef);
-        
+
     //     firepad.on('ready', function() {
     //         if (firepad.isHistoryEmpty()) {
     //             firepad.setHtml('<span style="font-size: 24px;">Rich-text editing with <span style="color: red">Firepad!</span></span><br/><br/>Collaborative-editing made easy.\n');
@@ -91,7 +91,7 @@ class FirebaseMirror extends Component {
                 }}
             </FirebaseContext.Consumer>
         </div>
-        
+
     );
   }
 }
