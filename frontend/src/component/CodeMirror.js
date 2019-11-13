@@ -22,8 +22,12 @@ const options = {
 
 function CodeMirrorComponent(props) {
   let defaultValue =
-  `
-  Spring-2015-Q3.txt
+  `def mystery(item):
+  if not item:
+    return 0
+  else:
+    return 1 + mystery(item[1:])
+print(mystery('cs 1301'))
   `
 
   const [value, setValue] = useState(
