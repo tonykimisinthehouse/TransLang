@@ -6,6 +6,7 @@ import FirebaseMirror from './component/FirebaseMirror';
 
 
 function App() {
+
   return (
     <div>
       <div className="App">
@@ -23,13 +24,10 @@ function App() {
 class CodeMirrorContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    }
+    this.state = {    }
   }
 
   render() {
-    // return <div className="Container">hello</div>;
     return (
       <div className="OuterContainer">
         <p id="topic-title">Topic title</p>
@@ -39,7 +37,8 @@ class CodeMirrorContainer extends React.Component {
           <div>
               <CodeMirrorComponent readOnly={false}/>
           </div>
-          <button>Next</button>
+          {/* <button>Next</button> */}
+          <TogetherButton/>
         </div>
       </div>
     );
@@ -63,6 +62,16 @@ class Transcript extends React.Component {
     );
   }
 }
+
+function TogetherButton() {
+  function handleClick(e) {
+    console.log('The link was clicked.');
+    window.TogetherJS(this);
+    return false;
+  }
+  return <button onClick={handleClick}>Start Collaborating</button>;
+}
+
 
 class Resources extends React.Component {
   constructor(props) {
