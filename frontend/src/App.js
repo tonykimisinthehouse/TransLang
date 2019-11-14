@@ -31,7 +31,6 @@ class CodeMirrorContainer extends React.Component {
   render() {
     return (
       <div className="OuterContainer">
-        <p id="topic-title">Topic title</p>
         <div className="CodeMirrorContainer">
           <h1>Problem instructions</h1>
           <h3>Question prompt</h3>
