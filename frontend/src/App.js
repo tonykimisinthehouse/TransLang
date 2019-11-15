@@ -2,6 +2,8 @@ import React from 'react';
 import CodeMirrorComponent from './component/CodeMirror';
 import logo from './logo.svg';
 import './App.css';
+import Transcript from './Transcript'
+
 import FirebaseMirror from './component/FirebaseMirror';
 
 
@@ -46,23 +48,7 @@ class CodeMirrorContainer extends React.Component {
   }
 }
 
-class Transcript extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    }
-  }
-  render() {
-    // return <div className="Container">hello</div>;
-    return (
-        <div className="Transcript">
-                <p>Mariana: alsdjfk
-                  Tony: ajskdfjl
-                </p>
-        </div>
-    );
-  }
-}
+
 
 class Resources extends React.Component {
   constructor(props) {
