@@ -23,7 +23,7 @@ body {
   margin: 0;
   height: 100vh;
   /* width: 100%; */
-  
+
 
 }
 .three-main-columns {
@@ -43,7 +43,7 @@ body {
   height: 100%;
   width: 60%;
   /* max- */
-  background: yellow;
+  background: #FCEACF;
 }
 
 .Transcript {

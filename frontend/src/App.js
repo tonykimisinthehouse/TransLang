@@ -8,6 +8,7 @@ import FirebaseMirror from './component/FirebaseMirror';
 
 
 function App() {
+
   return (
     <div>
       <div className="App">
@@ -26,28 +27,34 @@ class CodeMirrorContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
-    }
+      }
   }
 
   render() {
-    // return <div className="Container">hello</div>;
     return (
       <div className="OuterContainer">
-        <p id="topic-title">Topic title</p>
         <div className="CodeMirrorContainer">
           <h1>Problem instructions</h1>
           <h3>Question prompt</h3>
           <div>
               <CodeMirrorComponent readOnly={false}/>
           </div>
-          <button>Next</button>
+          <TogetherJSButton/>
         </div>
       </div>
     );
   }
 }
 
+
+
+// function TogetherButton() {
+//   function handleClick(e) {
+//     window.TogetherJS(this);
+//     return false;
+//   }
+//   return <button onClick={handleClick}>Start Collaborating</button>;
+// }
 
 
 class Resources extends React.Component {
@@ -62,6 +69,44 @@ class Resources extends React.Component {
                 <p>For Loops suggested resources</p>
         </div>
     );
+  }
+}
+
+
+class TogetherJSButton extends React.Component{
+  constructor(props){
+      super(props);
+      this.state={
+        togetherON: false,
+        text: 'Start Collaborating'
+      }
+  }
+
+  ToggleButton(){
+    if (this.state.togetherON) {
+      this.setState((currentState) => ({
+        togetherON: !currentState.togetherON,
+      }));
+      this.state.text = 'Start Collaborating';
+    } else {
+      this.setState((currentState) => ({
+        togetherON: !currentState.togetherON,
+      }));
+      this.state.text = 'Finish Collaborating';
+    }
+
+    window.TogetherJS(this);
+    return false;
+  }
+
+  render(){
+      return(
+          <div>
+            <button onClick={ () => this.ToggleButton() }>
+              {this.state.text}
+            </button>
+          </div>
+      )
   }
 }
 
