@@ -38,7 +38,7 @@ class Transcript extends React.Component {
         // let gotFinal = this.state.gotFinal;
         // if (gotFinal == false) {
         //     transcripts.pop();
-        // } 
+        // }
         // const {
         //     SpeechRecognition
         // } = createSpeechRecognitionPonyfill({
@@ -62,9 +62,9 @@ class Transcript extends React.Component {
                 // gotFinal: result.isFinal ? true : false,
             })
         };
-        
+
         // TODO: other call backs such as timedout, failed, started, ended, more here:https://github.com/compulim/web-speech-cognitive-services/blob/HEAD/SPEC-RECOGNITION.md#happy-path
-        
+
         recognizer.start();
     }
 
