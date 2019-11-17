@@ -41,7 +41,6 @@ class Problem extends React.Component {
                 <MultipleChoice answer={answer2} correctChoice={correctChoice2} choiceA={MC2A} choiceB={MC2B} choiceC={MC2C} choiceD={MC2D}/>
             </div>
             <p>Now work with your partner to fix the error!</p>
-            <button>Edit code!</button>
 
             <button type="submit" onClick={this.handleSubmit}>Get Answer</button>
           </div>

@@ -32,12 +32,10 @@ class CodeMirrorContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      }
+    }
   }
 
   render() {
-
-
     return (
       <div className="OuterContainer">
         <div className="CodeMirrorContainer">
@@ -45,7 +43,7 @@ class CodeMirrorContainer extends React.Component {
           <h1>Problem instructions</h1>
           <h3>Question prompt</h3>
           <div>
-              <CodeMirrorComponent readOnly={true}/>
+              <CodeMirrorComponent readOnly={false}/>
           </div>
           <Problem problemNumber={1}></Problem>
         </div>
