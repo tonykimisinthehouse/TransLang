@@ -1,16 +1,16 @@
 .drawArea {
-    width: 400px;
-    height: 400px;
+    width: 1000px;
+    height: 400vh;
     border: 1px solid black;
     float: left;
     cursor: crosshair;
-    background: black;
+    /* background: black; */
   }
   
   .path {
     fill: none;
     stroke-width: 5px;
-    stroke: white;
+    stroke: black;
     stroke-linejoin: round;
     stroke-linecap: round;
   }
