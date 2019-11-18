@@ -21,7 +21,6 @@ gray = cv.bitwise_not(gray)
 thresh = cv.threshold(gray, 0, 255, # threshold the image, setting all foreground pixels to
                       cv.THRESH_BINARY | cv.THRESH_OTSU)[1] # 255 and all background pixel to 0
 
-
 coords = np.column_stack(np.where(thresh > 0))
 angle = cv.minAreaRect(coords)[-1]
 
