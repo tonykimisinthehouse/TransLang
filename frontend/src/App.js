@@ -1,7 +1,14 @@
 import React from 'react';
 import CodeMirrorComponent from './component/CodeMirror';
+import MultipleChoice from './MultipleChoice';
+import Problem from './Problem';
+
 import logo from './logo.svg';
 import './App.css';
+// import './MultipleChoice.css';
+
+// import Transcript from './Transcript'
+
 import FirebaseMirror from './component/FirebaseMirror';
 
 
@@ -14,7 +21,7 @@ function App() {
         <div className="three-main-columns">
           <Resources/>
           <CodeMirrorContainer/>
-          <Transcript/>
+          {/* <Transcript/> */}
         </div>
       </div>
     </div>
@@ -25,51 +32,25 @@ class CodeMirrorContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      }
+    }
   }
 
   render() {
     return (
       <div className="OuterContainer">
         <div className="CodeMirrorContainer">
+          <TogetherJSButton/>
           <h1>Problem instructions</h1>
           <h3>Question prompt</h3>
           <div>
               <CodeMirrorComponent readOnly={false}/>
           </div>
-          <TogetherJSButton/>
+          <Problem problemNumber={1}></Problem>
         </div>
       </div>
     );
   }
 }
-
-class Transcript extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    }
-  }
-  render() {
-    // return <div className="Container">hello</div>;
-    return (
-        <div className="Transcript">
-                <p>Mariana: alsdjfk
-                  Tony: ajskdfjl
-                </p>
-        </div>
-    );
-  }
-}
-
-// function TogetherButton() {
-//   function handleClick(e) {
-//     window.TogetherJS(this);
-//     return false;
-//   }
-//   return <button onClick={handleClick}>Start Collaborating</button>;
-// }
-
 
 class Resources extends React.Component {
   constructor(props) {
@@ -80,7 +61,7 @@ class Resources extends React.Component {
   render() {
     return (
         <div className="Resources">
-                <p>For Loops suggested resources</p>
+            <p>For Loops suggested resources</p>
         </div>
     );
   }
@@ -106,7 +87,7 @@ class TogetherJSButton extends React.Component{
       this.setState((currentState) => ({
         togetherON: !currentState.togetherON,
       }));
-      this.state.text = 'Finish Collaborating';
+      this.state.text = 'Done Collaborating';
     }
 
     window.TogetherJS(this);
@@ -116,7 +97,7 @@ class TogetherJSButton extends React.Component{
   render(){
       return(
           <div>
-            <button onClick={ () => this.ToggleButton() }>
+            <button className="TogetherJSButton" onClick={ () => this.ToggleButton() }>
               {this.state.text}
             </button>
           </div>

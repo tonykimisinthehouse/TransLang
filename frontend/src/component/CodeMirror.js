@@ -22,12 +22,13 @@ const options = {
 
 function CodeMirrorComponent(props) {
   let defaultValue =
-  `def mystery(item):
+  `def length(item):
   if not item:
-    return 0
+    return 1
   else:
-    return 1 + mystery(item[1:])
-print(mystery('cs 1301'))
+    return 1 + length(item[1:])
+
+print(length('CS 1301'))
   `
 
   const [value, setValue] = useState(
