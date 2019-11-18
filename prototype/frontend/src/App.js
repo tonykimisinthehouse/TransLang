@@ -8,10 +8,12 @@ import {
 
 import Question from './components/instructions/Question';
 import DrawArea from './components/CodeEditor/DrawArea';
+import Header from './components/Header';
 
 function App() {
   return (
     <div className="App">
+      <Header/>
       <Router>
       <div>
         <nav>
