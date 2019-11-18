@@ -4,12 +4,13 @@
     border: 1px solid black;
     float: left;
     cursor: crosshair;
+    background: black;
   }
   
   .path {
     fill: none;
     stroke-width: 5px;
-    stroke: green;
+    stroke: white;
     stroke-linejoin: round;
     stroke-linecap: round;
   }

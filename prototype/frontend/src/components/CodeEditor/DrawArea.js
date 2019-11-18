@@ -10,12 +10,14 @@ class DrawArea extends React.Component {
   
       this.state = {
         lines: new Immutable.List(),
-        isDrawing: false
+        isDrawing: false,
+        isCommenting: false,
       };
   
       this.handleMouseDown = this.handleMouseDown.bind(this);
       this.handleMouseMove = this.handleMouseMove.bind(this);
       this.handleMouseUp = this.handleMouseUp.bind(this);
+      this.handleButtonClick = this.handleButtonClick.bind(this);
     }
   
     componentDidMount() {
@@ -62,16 +64,28 @@ class DrawArea extends React.Component {
         y: mouseEvent.clientY - boundingRect.top,
       });
     }
+
+    handleButtonClick() {
+        console.log("The button was clicked")
+        let commenting = this.state.isCommenting;
+        this.setState({isCommenting: !commenting})
+    }
   
     render() {
+        const isCommenting = this.state.isCommenting;
       return (
-        <div
-          className="drawArea"
-          ref="drawArea"
-          onMouseDown={this.handleMouseDown}
-          onMouseMove={this.handleMouseMove}
-        >
-          <Drawing lines={this.state.lines} />
+        <div>
+            <button onClick={this.handleButtonClick}>
+                {isCommenting? `Code` : `Comment`}
+            </button>
+            <div
+                className="drawArea"
+                ref="drawArea"
+                onMouseDown={this.handleMouseDown}
+                onMouseMove={this.handleMouseMove}
+            >
+                <Drawing lines={this.state.lines} />
+            </div>
         </div>
       );
     }
