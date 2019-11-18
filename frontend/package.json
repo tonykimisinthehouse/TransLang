@@ -5,6 +5,7 @@
   "dependencies": {
     "codemirror": "^5.49.2",
     "firebase": "^7.2.3",
+    "microsoft-cognitiveservices-speech-sdk": "^1.8.0",
     "react": "^16.11.0",
     "react-codemirror2": "^6.0.0",
     "react-dictate-button": "^1.1.3",

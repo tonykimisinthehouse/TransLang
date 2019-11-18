@@ -2,6 +2,7 @@ import createSpeechRecognitionPonyfill from 'web-speech-cognitive-services';
 import DictateButton from 'react-dictate-button';
 import React from 'react';
 
+import sdk from 'microsoft-cognitiveservices-speech-sdk';
 
 // TODO: convert this to directly using microsoft-cognitiveservices-speech-sdk
 /*Links:
@@ -13,11 +14,14 @@ class Transcript extends React.Component {
     constructor(props) {
         super(props);
 
+        const region = 'eastus';
+        const subscriptionKey = '48775757e6594c94b69b29bd89de9fd9';
+
         const {
             SpeechRecognition
         } = createSpeechRecognitionPonyfill({
-            region: 'eastus',
-            subscriptionKey: '48775757e6594c94b69b29bd89de9fd9'
+            region: region,
+            subscriptionKey: subscriptionKey
         });
 
         const recognizer = new SpeechRecognition();
@@ -30,6 +34,8 @@ class Transcript extends React.Component {
             gotFinal: true,
             recognizer: recognizer,
         }
+
+
     }
 
     recognize() {
@@ -68,6 +74,13 @@ class Transcript extends React.Component {
         recognizer.start();
     }
 
+    translate_recognize() {
+        // CONT NOTE: trying to replicate things from translation.js from microsoft samples
+        // ALREADY imported sdk above
+        // also calling this func from button below
+        // var audioConfig = sdk.AudioConfig.fromStre
+    }
+
     stop_recognizing() {
         console.log("Stopping");
         this.state.recognizer.stop();
@@ -91,7 +104,7 @@ class Transcript extends React.Component {
 
         return (
             <div className="Transcript">
-                <button onClick={() => this.recognize()}>Recognize!</button>
+                <button onClick={() => this.translate_recognize()}>Recognize!</button>
                 <button onClick={() => this.stop_recognizing()}>STOP</button>
                 <br></br>
                 <br></br>
