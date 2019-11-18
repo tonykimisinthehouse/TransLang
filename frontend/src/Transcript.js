@@ -104,7 +104,7 @@ class Transcript extends React.Component {
 
         return (
             <div className="Transcript">
-                <button onClick={() => this.translate_recognize()}>Recognize!</button>
+                <button onClick={() => this.recognize()}>Recognize!</button>
                 <button onClick={() => this.stop_recognizing()}>STOP</button>
                 <br></br>
                 <br></br>

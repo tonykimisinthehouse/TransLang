@@ -7,7 +7,7 @@ import logo from './logo.svg';
 import './App.css';
 // import './MultipleChoice.css';
 
-// import Transcript from './Transcript'
+import Transcript from './Transcript'
 
 import FirebaseMirror from './component/FirebaseMirror';
 
@@ -21,7 +21,7 @@ function App() {
         <div className="three-main-columns">
           <Resources/>
           <CodeMirrorContainer/>
-          {/* <Transcript/> */}
+          <Transcript/>
         </div>
       </div>
     </div>
