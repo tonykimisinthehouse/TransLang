@@ -2,7 +2,7 @@ import createSpeechRecognitionPonyfill from 'web-speech-cognitive-services';
 import DictateButton from 'react-dictate-button';
 import React from 'react';
 
-import sdk from 'microsoft-cognitiveservices-speech-sdk';
+import { TranslationRecognizer, SpeechTranslationConfig, AudioConfig, ResultReason, } from 'microsoft-cognitiveservices-speech-sdk';
 
 // TODO: convert this to directly using microsoft-cognitiveservices-speech-sdk
 /*Links:
@@ -10,14 +10,40 @@ https://docs.microsoft.com/en-us/javascript/api/overview/azure/speech-service?vi
 https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/js/browser
 */
 
+function LangButton(props) {
+    // needs arguments onClick (callback func) and lang (string)
+    return (
+        <button className="" onClick={props.onClick}>
+            {props.lang}
+        </button>
+    );
+}
+
 class Transcript extends React.Component {
     constructor(props) {
         super(props);
 
         const region = 'eastus';
         const subscriptionKey = '48775757e6594c94b69b29bd89de9fd9';
+        const language = 'en-US'; // TODO: accept this from props
+        // const target_languages // TODO: accept from props and add one by one
 
-        const {
+        /*
+        Languages:
+        en-US (english) | en 
+        ar-EG (Arabic)  | ar
+        es-MX (Spanish) | es
+
+        Scenario:
+        Speaker 1: Arabic and english
+        Speaker 2: Spanish and english
+
+        Other languages:
+        fr-FR (French)  | fr
+        zh-CN (Chinese) | zh-Hans
+        */
+
+        /* const {
             SpeechRecognition
         } = createSpeechRecognitionPonyfill({
             region: region,
@@ -26,16 +52,97 @@ class Transcript extends React.Component {
 
         const recognizer = new SpeechRecognition();
         recognizer.interimResults = true;
-        recognizer.lang = 'en-US';
-        recognizer.continuous = true;
+        recognizer.lang = language;
+        recognizer.continuous = true; */
+
+        // ANOTHER APPROACH
+        const translation_config = SpeechTranslationConfig.fromSubscription(subscriptionKey, region);
+        translation_config.speechRecognitionLanguage = language;
+        translation_config.addTargetLanguage("de"); 
+        const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
+
+        const trecognizer = new TranslationRecognizer(translation_config, audioConfig);
+        // TODO: add common phrases (for better recog)
+
+        trecognizer.recognizing = this.recognizing_callback;
+        trecognizer.recognized = this.recognized_callback;
 
         this.state = {
-            transcripts : [],
-            gotFinal: true,
-            recognizer: recognizer,
+            en_transcripts : ["Transcripts"],
+            gotFinal: false,
+            trecognizer: trecognizer,
+            recognizingCurrently: false,
+            buttonLabel: "Recognize",
         }
+    }
+
+    recognizing_callback(s, e) {
+        console.log("(recognizing) " + e.result.text);
+        // console.log(e.result.translations.get("de"));
+        const transcripts = this.state.en_transcripts.slice();
+        // if (!this.state.gotFinal) {
+        //     transcripts.pop();
+        // }
+
+        // just english temporarily (which is current listening lang)
+        // this.setState({
+        //     en_transcripts: transcripts.concat([e.result.text]),
+        //     gotFinal: false,
+        // }); 
+    }
+
+    recognized_callback(s, e) {
+        
+        // var str = "\r\n(recognized) Reason: " + ResultReason[e.result.reason] + " Text: " + e.result.text + " Translations:";
+        // var language = "de";
+        // str += " [" + language + "] " + e.result.translations.get(language);
+        // str += "\r\n";
+        // console.log(str);
+
+        if (e.result.text == ""){
+            return;
+        }
+        const recognized = e.result.text;
+        console.log("recognized " + recognized);
+        const transcripts = this.state.en_transcripts.slice();
+        // if (!this.state.gotFinal){
+        //     transcripts.pop();
+        // }
+
+        this.setState({
+            en_transcripts: transcripts.concat([recognized]),
+            gotFinal: true,
+        });
+    }
+
+    translate_recognize() {
+        const recognizer = this.state.trecognizer;
+        recognizer.startContinuousRecognitionAsync();
+    }
+
+    stop_translating() {
+        const recognizer = this.state.trecognizer;
+        recognizer.stopContinuousRecognitionAsync();
+    }
+
+    toggle_recognizing() {
+        const startLabel = "Recognize";
+        const stopLabel = "Stop";
 
 
+        if (this.state.recognizingCurrently) { // already recognizing
+            this.stop_translating();
+            this.setState({
+                recognizingCurrently: false,
+                buttonLabel: startLabel,
+            });
+        } else {                                // not recognizing
+            this.translate_recognize();
+            this.setState({
+                recognizingCurrently: true,
+                buttonLabel: stopLabel,
+            });
+        }
     }
 
     recognize() {
@@ -74,13 +181,6 @@ class Transcript extends React.Component {
         recognizer.start();
     }
 
-    translate_recognize() {
-        // CONT NOTE: trying to replicate things from translation.js from microsoft samples
-        // ALREADY imported sdk above
-        // also calling this func from button below
-        // var audioConfig = sdk.AudioConfig.fromStre
-    }
-
     stop_recognizing() {
         console.log("Stopping");
         this.state.recognizer.stop();
@@ -89,12 +189,13 @@ class Transcript extends React.Component {
 
     render() {
 
-        const transcripts = this.state.transcripts.slice();
+        const transcripts = this.state.en_transcripts.slice();
+        console.log("transcripts");
+        console.log(transcripts);
         const wordsOut = transcripts.map((step, move) => {
-
             return (
                 <a key={move}>
-                    <b>Haard</b>: {step[0].transcript} <br></br>
+                    <b>Haard</b>: {step} <br></br>
                 </a>
             );
         });
@@ -104,8 +205,7 @@ class Transcript extends React.Component {
 
         return (
             <div className="Transcript">
-                <button onClick={() => this.recognize()}>Recognize!</button>
-                <button onClick={() => this.stop_recognizing()}>STOP</button>
+                <button onClick={() => this.toggle_recognizing()}>{this.state.buttonLabel}</button>
                 <br></br>
                 <br></br>
                 {wordsOut}

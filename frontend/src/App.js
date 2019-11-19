@@ -21,7 +21,16 @@ function App() {
         <div className="three-main-columns">
           <Resources/>
           <CodeMirrorContainer/>
-          <Transcript/>
+          <Transcript
+            languages = {
+              ["English", "en-US", "en"], 
+              ["Arabic", "ar-EG", "ar"], 
+              ["Spanish Mexico", "es-MX", "es"],
+              ["French", "fr-FR", "fr"],
+              ["Chinese Simplified", "zh-CN", "zh-Hans"]
+              ["Chinese Traditional", "zh-HK", "zh-Hant"]
+            }
+          />
         </div>
       </div>
     </div>
