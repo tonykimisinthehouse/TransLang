@@ -11,6 +11,7 @@ import DrawArea from './components/CodeEditor/DrawArea';
 import Header from './components/Header';
 import AceEditor from './components/CodeEditor/React-Ace';
 import Editor from './components/CodeEditor/React-Ace';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
