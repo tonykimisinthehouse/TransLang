@@ -9,6 +9,8 @@ import {
 import Question from './components/instructions/Question';
 import DrawArea from './components/CodeEditor/DrawArea';
 import Header from './components/Header';
+import AceEditor from './components/CodeEditor/React-Ace';
+import Editor from './components/CodeEditor/React-Ace';
 
 function App() {
   return (
@@ -34,7 +36,7 @@ function App() {
             renders the first one that matches the current URL. */}
         <Switch>
           <Route path="/code">
-            <DrawArea />
+            <Editor />
           </Route>
           <Route path="/">
             <Question />
