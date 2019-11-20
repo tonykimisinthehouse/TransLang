@@ -8,29 +8,48 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
 import Button from 'react-bootstrap/Button';
 
-import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-github";
+import './index.css';
 
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+
+const annotations = [
+    {
+      row: 2, // must be 0 based
+      column: 3, // must be 0 based
+      text: "hello", // text to show in tooltip
+      type: "error",
+    //   e
+    }
+];
+
+const markers = [
+    {
+      startRow: 0,
+      startCol: 0,
+      endRow: 0,
+      endCol: 3,
+      type: "text",
+      className: "test-marker",
+    }
+  ];
 
 function Editor(){
-    
+    const codeString = '(num) => num + 1';
+
     function onChange(newValue) {
         console.log("editor new value", newValue);
+        
     }
     return(
         <div>
-        <AceEditor
-            mode="java"
-            theme="github"
-            onChange={onChange}
-            name="UNIQUE_ID_OF_DIV"
-            editorProps={{
-                $blockScrolling: true
-            }}
-            value="hello world"
-            id="#editor"
-        />
-        <MarkerPopup/>
+            <SyntaxHighlighter>
+                <MarkerPopup/>
+            </SyntaxHighlighter>
+
         </div>
     )
 }
@@ -46,9 +65,18 @@ const popover = (
 );
 
 function MarkerPopup() {
+    const codeString = '(num) => num + 1';
+
     return(
-        <OverlayTrigger trigger="hover" placement="right" overlay={popover}>
-            <Button variant="success">Click me to see</Button>
+        <OverlayTrigger
+            trigger="hover"
+            placement="right"
+            overlay={popover}
+            style={{width: 100}}
+        >
+            <div>
+               {codeString}
+            </div>
         </OverlayTrigger>
     )
 }
