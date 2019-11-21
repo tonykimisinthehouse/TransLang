@@ -64,22 +64,23 @@ class Transcript extends React.Component {
         const trecognizer = new TranslationRecognizer(translation_config, audioConfig);
         // TODO: add common phrases (for better recog)
 
-        trecognizer.recognizing = this.recognizing_callback;
-        trecognizer.recognized = this.recognized_callback;
+        
 
         this.state = {
-            en_transcripts : ["Transcripts"],
+            en_transcripts : [],
+            transcripts : [],
             gotFinal: false,
             trecognizer: trecognizer,
             recognizingCurrently: false,
             buttonLabel: "Recognize",
         }
+
     }
 
     recognizing_callback(s, e) {
-        console.log("(recognizing) " + e.result.text);
+        // console.log("(recognizing) " + e.result.text);
         // console.log(e.result.translations.get("de"));
-        const transcripts = this.state.en_transcripts.slice();
+        // const transcripts = this.state.en_transcripts.slice();
         // if (!this.state.gotFinal) {
         //     transcripts.pop();
         // }
@@ -89,6 +90,16 @@ class Transcript extends React.Component {
         //     en_transcripts: transcripts.concat([e.result.text]),
         //     gotFinal: false,
         // }); 
+    }
+
+    addResultToTranscript(resultStr) {
+        console.log("adding result to global. result:");
+        console.log(resultStr);
+
+        console.log("curr Transcript");
+        console.log(this.state.en_transcripts);
+        this.state.en_transcripts.push(resultStr);
+        console.log(this.state.en_transcripts);
     }
 
     recognized_callback(s, e) {
@@ -103,20 +114,48 @@ class Transcript extends React.Component {
             return;
         }
         const recognized = e.result.text;
-        console.log("recognized " + recognized);
-        const transcripts = this.state.en_transcripts.slice();
+        this.addResultToTranscript(recognized);
+        // console.log("recognized as lst");
+        // console.log([recognized]);
+        // console.log(recognized);
+        // const transcripts = this.state.en_transcripts;
+        // this.state.en_transcripts.push(recognized);
+        // console.log("gets here");
+        // console.log("preintermediate transcript");
+        // console.log(transcripts);
+        // transcripts.append(recognized);
+        // console.log("intermediate transcripts");
+        // console.log(transcripts);
         // if (!this.state.gotFinal){
         //     transcripts.pop();
         // }
 
-        this.setState({
-            en_transcripts: transcripts.concat([recognized]),
-            gotFinal: true,
-        });
+        // this.setState({
+            // en_transcripts: transcripts,
+            // gotFinal: true,
+        // });
     }
 
     translate_recognize() {
         const recognizer = this.state.trecognizer;
+        recognizer.recognizing = this.recognizing_callback;
+        // recognizer.recognized = this.recognized_callback;
+        recognizer.recognized = (s, e) => {
+            console.log("inside inline callback function");
+            console.log("prev transcripts");
+            console.log(this.state.en_transcripts);
+            console.log("e.result.text")
+            console.log(e.result.text); // is string
+            const recognized = e.result.text;
+            if (recognized == ""){
+                return;
+            }
+            const en_transcripts = this.state.en_transcripts.slice();
+            this.setState({
+                en_transcripts: en_transcripts.concat([recognized]),
+            });
+            console.log("got here");
+        }
         recognizer.startContinuousRecognitionAsync();
     }
 
