@@ -51,11 +51,13 @@ body {
   margin: 0;
   width: 20%;
   height: 100%;
+  /* overflow-y: auto; */
 }
 
-/* .scrollableDialogues {
-
-} */
+.scrollableDialogues {
+  overflow-y: scroll;
+  height:93%;
+}
 
 .Resources {
   background: rgb(228, 228, 228);

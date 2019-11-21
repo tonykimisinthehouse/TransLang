@@ -52,7 +52,7 @@ class Transcript extends React.Component {
         // TODO: add common phrases (for better recog)
 
         this.state = {
-            en_transcripts: ["Testing.", "Testing.", "Does this work?", "Huh", "How are you?", "I am mom, thank you.", "Cool.", "Does it work?", "Tomorrow.", "Doesn't work.", "Ask Mark.", "Does it work?", "Doesn't work.", "Doesn't work.", "Testing.", "Testing.", "Does this work?", "Huh", "How are you?", "I am mom, thank you.", "Cool.", "Does it work?", "Tomorrow.", "Doesn't work.", "Ask Mark.", "Does it work?", "Doesn't work.", "Doesn't work.", "Testing.", "Testing.", "Does this work?", "Huh", "How are you?", "I am mom, thank you.", "Cool.", "Does it work?", "Tomorrow.", "Doesn't work.", "Ask Mark.", "Does it work?", "Doesn't work.", "Doesn't work.",],
+            en_transcripts: ["Testing.", "Testing.", "Does this work?", "Huh", "How are you?", "I am mom, thank you.", "Cool.", "Does it work?", "Tomorrow.", "Doesn't work.", "Ask Mark.", "Does it work?", "Doesn't work.", "Doesn't work.", "Testing.", "Testing.", "Does this work?", "Huh", "How are you?", "I am mom, thank you.", "Cool.", "Does it work?", "Tomorrow.", "Doesn't work.", "Ask Mark.", "Does it work?", "Doesn't work.", "Doesn't work.", "Testing.", "Testing.", "Does this work?", "Huh", "How are you?", "I am mom, thank you.", "Cool.", "Does it work?", "Tomorrow.", "Doesn't work.", "Ask Mark.", "Does it work?", "Doesn't work.", "Doesn't work.", "Testing.", "Testing.", "Does this work?", "Huh", "How are you?", "I am mom, thank you.", "Cool.", "Does it work?", "Tomorrow.", "Doesn't work.", "Ask Mark.", "Does it work?", "Doesn't work.", "Doesn't work.",],
             transcripts : [],
             gotFinal: false,
             trecognizer: trecognizer,
@@ -142,7 +142,7 @@ class Transcript extends React.Component {
                 <button onClick={() => this.toggle_recognizing()}>{this.state.buttonLabel}</button>
                 <br></br>
                 <br></br>
-                <div className="scrollableDialogues" style={{scrollY: 'auto'}}>
+                <div className="scrollableDialogues" style={{overflowY: 'auto'}}>
                     {wordsOut}
                 </div>
             </div>
