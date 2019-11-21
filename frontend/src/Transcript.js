@@ -52,7 +52,7 @@ class Transcript extends React.Component {
         // TODO: add common phrases (for better recog)
 
         this.state = {
-            en_transcripts : [],
+            en_transcripts: ["Testing.", "Testing.", "Does this work?", "Huh", "How are you?", "I am mom, thank you.", "Cool.", "Does it work?", "Tomorrow.", "Doesn't work.", "Ask Mark.", "Does it work?", "Doesn't work.", "Doesn't work.", "Testing.", "Testing.", "Does this work?", "Huh", "How are you?", "I am mom, thank you.", "Cool.", "Does it work?", "Tomorrow.", "Doesn't work.", "Ask Mark.", "Does it work?", "Doesn't work.", "Doesn't work.", "Testing.", "Testing.", "Does this work?", "Huh", "How are you?", "I am mom, thank you.", "Cool.", "Does it work?", "Tomorrow.", "Doesn't work.", "Ask Mark.", "Does it work?", "Doesn't work.", "Doesn't work.",],
             transcripts : [],
             gotFinal: false,
             trecognizer: trecognizer,
@@ -67,7 +67,7 @@ class Transcript extends React.Component {
         recognizer.recognizing = (s, e) => {
             const recognizing = e.result.text;
             if (recognizing == "") { return; } // don't add empty recognized
-            console.log("RECOGNIZING");
+            // console.log("RECOGNIZING");
             const en_transcripts = this.state.en_transcripts.slice();
             if (this.state.gotFinal == false) en_transcripts.pop();
             this.setState({
@@ -80,7 +80,7 @@ class Transcript extends React.Component {
         recognizer.recognized = (s, e) => {
             const recognized = e.result.text;
             if (recognized == ""){ return; } // don't add empty recognized 
-            console.log("RECOGNIZED");
+            // console.log("RECOGNIZED");
             const en_transcripts = this.state.en_transcripts.slice();
 
             if (this.state.gotFinal == false) en_transcripts.pop();
@@ -135,12 +135,14 @@ class Transcript extends React.Component {
 
         // return <div className="Container">hello</div>;
 
+        // fancy react scroll: https://www.npmjs.com/package/react-scroll (future)
+
         return (
             <div className="Transcript">
                 <button onClick={() => this.toggle_recognizing()}>{this.state.buttonLabel}</button>
                 <br></br>
                 <br></br>
-                <div className="scrollableDialogues">
+                <div className="scrollableDialogues" style={{scrollY: 'auto'}}>
                     {wordsOut}
                 </div>
             </div>
