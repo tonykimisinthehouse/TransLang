@@ -67,7 +67,7 @@ class Transcript extends React.Component {
         recognizer.recognizing = (s, e) => {
             const recognizing = e.result.text;
             if (recognizing == "") { return; } // don't add empty recognized
-            // console.log("RECOGNIZING");
+            console.log("RECOGNIZING");
             const en_transcripts = this.state.en_transcripts.slice();
             if (this.state.gotFinal == false) en_transcripts.pop();
             this.setState({
@@ -80,10 +80,10 @@ class Transcript extends React.Component {
         recognizer.recognized = (s, e) => {
             const recognized = e.result.text;
             if (recognized == ""){ return; } // don't add empty recognized 
-            // console.log("RECOGNIZED");
+            console.log("RECOGNIZED");
             const en_transcripts = this.state.en_transcripts.slice();
 
-            en_transcripts.pop();
+            if (this.state.gotFinal == false) en_transcripts.pop();
             this.setState({
                 en_transcripts: en_transcripts.concat([recognized]),
                 gotFinal: true,
@@ -140,7 +140,9 @@ class Transcript extends React.Component {
                 <button onClick={() => this.toggle_recognizing()}>{this.state.buttonLabel}</button>
                 <br></br>
                 <br></br>
-                {wordsOut}
+                <div className="scrollableDialogues">
+                    {wordsOut}
+                </div>
             </div>
         );
     }
