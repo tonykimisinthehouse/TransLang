@@ -1,5 +1,3 @@
-import createSpeechRecognitionPonyfill from 'web-speech-cognitive-services';
-import DictateButton from 'react-dictate-button';
 import React from 'react';
 
 import { TranslationRecognizer, SpeechTranslationConfig, AudioConfig, ResultReason, } from 'microsoft-cognitiveservices-speech-sdk';
@@ -43,18 +41,6 @@ class Transcript extends React.Component {
         zh-CN (Chinese) | zh-Hans
         */
 
-        /* const {
-            SpeechRecognition
-        } = createSpeechRecognitionPonyfill({
-            region: region,
-            subscriptionKey: subscriptionKey
-        });
-
-        const recognizer = new SpeechRecognition();
-        recognizer.interimResults = true;
-        recognizer.lang = language;
-        recognizer.continuous = true; */
-
         // ANOTHER APPROACH
         const translation_config = SpeechTranslationConfig.fromSubscription(subscriptionKey, region);
         translation_config.speechRecognitionLanguage = language;
@@ -62,9 +48,8 @@ class Transcript extends React.Component {
         const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
 
         const trecognizer = new TranslationRecognizer(translation_config, audioConfig);
-        // TODO: add common phrases (for better recog)
-
         
+        // TODO: add common phrases (for better recog)
 
         this.state = {
             en_transcripts : [],
@@ -77,85 +62,35 @@ class Transcript extends React.Component {
 
     }
 
-    recognizing_callback(s, e) {
-        // console.log("(recognizing) " + e.result.text);
-        // console.log(e.result.translations.get("de"));
-        // const transcripts = this.state.en_transcripts.slice();
-        // if (!this.state.gotFinal) {
-        //     transcripts.pop();
-        // }
-
-        // just english temporarily (which is current listening lang)
-        // this.setState({
-        //     en_transcripts: transcripts.concat([e.result.text]),
-        //     gotFinal: false,
-        // }); 
-    }
-
-    addResultToTranscript(resultStr) {
-        console.log("adding result to global. result:");
-        console.log(resultStr);
-
-        console.log("curr Transcript");
-        console.log(this.state.en_transcripts);
-        this.state.en_transcripts.push(resultStr);
-        console.log(this.state.en_transcripts);
-    }
-
-    recognized_callback(s, e) {
-        
-        // var str = "\r\n(recognized) Reason: " + ResultReason[e.result.reason] + " Text: " + e.result.text + " Translations:";
-        // var language = "de";
-        // str += " [" + language + "] " + e.result.translations.get(language);
-        // str += "\r\n";
-        // console.log(str);
-
-        if (e.result.text == ""){
-            return;
-        }
-        const recognized = e.result.text;
-        this.addResultToTranscript(recognized);
-        // console.log("recognized as lst");
-        // console.log([recognized]);
-        // console.log(recognized);
-        // const transcripts = this.state.en_transcripts;
-        // this.state.en_transcripts.push(recognized);
-        // console.log("gets here");
-        // console.log("preintermediate transcript");
-        // console.log(transcripts);
-        // transcripts.append(recognized);
-        // console.log("intermediate transcripts");
-        // console.log(transcripts);
-        // if (!this.state.gotFinal){
-        //     transcripts.pop();
-        // }
-
-        // this.setState({
-            // en_transcripts: transcripts,
-            // gotFinal: true,
-        // });
-    }
-
     translate_recognize() {
         const recognizer = this.state.trecognizer;
-        recognizer.recognizing = this.recognizing_callback;
+        recognizer.recognizing = (s, e) => {
+            const recognizing = e.result.text;
+            if (recognizing == "") { return; } // don't add empty recognized
+            // console.log("RECOGNIZING");
+            const en_transcripts = this.state.en_transcripts.slice();
+            if (this.state.gotFinal == false) en_transcripts.pop();
+            this.setState({
+                en_transcripts: en_transcripts.concat([recognizing]),
+                gotFinal: false,
+            });
+
+        }; 
         // recognizer.recognized = this.recognized_callback;
         recognizer.recognized = (s, e) => {
-            console.log("inside inline callback function");
-            console.log("prev transcripts");
-            console.log(this.state.en_transcripts);
-            console.log("e.result.text")
-            console.log(e.result.text); // is string
             const recognized = e.result.text;
-            if (recognized == ""){
-                return;
-            }
+            if (recognized == ""){ return; } // don't add empty recognized 
+            // console.log("RECOGNIZED");
             const en_transcripts = this.state.en_transcripts.slice();
+
+            en_transcripts.pop();
             this.setState({
                 en_transcripts: en_transcripts.concat([recognized]),
+                gotFinal: true,
             });
-            console.log("got here");
-        }
+
+            // TODO: async call function to send transcripts to server
+        };
         recognizer.startContinuousRecognitionAsync();
     }
 
@@ -182,48 +117,6 @@ class Transcript extends React.Component {
                 buttonLabel: stopLabel,
             });
         }
-    }
-
-    recognize() {
-        console.log("HERE ");
-        const transcripts = this.state.transcripts.slice();
-        // let gotFinal = this.state.gotFinal;
-        // if (gotFinal == false) {
-        //     transcripts.pop();
-        // }
-        // const {
-        //     SpeechRecognition
-        // } = createSpeechRecognitionPonyfill({
-        //     region: 'eastus',
-        //     subscriptionKey: '48775757e6594c94b69b29bd89de9fd9'
-        // });
-
-        // const recognizer = new SpeechRecognition();
-        // recognizer.interimResults = true;
-        // recognizer.lang = 'en-US';
-        // recognizer.continuous = true;
-        const recognizer = this.state.recognizer;
-
-        recognizer.onresult = ({results}) => {
-            console.log(results);
-            // const result = results[0];
-            // console.log(result);
-            this.setState({
-                transcripts: results,
-                // transcripts: transcripts.concat([results[0][0].transcript]),
-                // gotFinal: result.isFinal ? true : false,
-            })
-        };
-
-        // TODO: other call backs such as timedout, failed, started, ended, more here:https://github.com/compulim/web-speech-cognitive-services/blob/HEAD/SPEC-RECOGNITION.md#happy-path
-
-        recognizer.start();
-    }
-
-    stop_recognizing() {
-        console.log("Stopping");
-        this.state.recognizer.stop();
-        // FIXME : can't start after stopping once!
     }
 
     render() {
