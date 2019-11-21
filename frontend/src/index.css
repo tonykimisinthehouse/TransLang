@@ -50,6 +50,13 @@ body {
   color: white;
   margin: 0;
   width: 20%;
+  height: 100%;
+  /* overflow-y: auto; */
+}
+
+.scrollableDialogues {
+  overflow-y: scroll;
+  height:93%;
 }
 
 .Resources {
