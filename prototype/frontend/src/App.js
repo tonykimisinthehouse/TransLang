@@ -12,6 +12,7 @@ import Header from './components/Header';
 import AceEditor from './components/CodeEditor/React-Ace';
 import Editor from './components/CodeEditor/React-Ace';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import CanvasContainer from './components/Canvas/Canvas';
 
 function App() {
   return (
@@ -37,7 +38,7 @@ function App() {
             renders the first one that matches the current URL. */}
         <Switch>
           <Route path="/code">
-            <Editor />
+            <CanvasContainer />
           </Route>
           <Route path="/">
             <Question />
