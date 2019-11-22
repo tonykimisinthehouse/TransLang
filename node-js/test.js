@@ -98,7 +98,7 @@ function getTranscript(auth) {
 
 
 /**
- * Gets transcripts
+ * Puts transcripts
  * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
  */
 function addTranscript(auth) {
