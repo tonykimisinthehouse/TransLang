@@ -16,14 +16,14 @@ function App() {
   return (
     <div>
       <div className="App">
-        <header className="App-header">Header</header>
+        <header className="App-header">EdTech CS 1301 Tracing</header>
         <div className="three-main-columns">
           <Resources/>
           <CodeMirrorContainer/>
           <Transcript
             languages = {
-              ["English", "en-US", "en"], 
-              ["Arabic", "ar-EG", "ar"], 
+              ["English", "en-US", "en"],
+              ["Arabic", "ar-EG", "ar"],
               ["Spanish Mexico", "es-MX", "es"],
               ["French", "fr-FR", "fr"],
               ["Chinese Simplified", "zh-CN", "zh-Hans"]
@@ -48,13 +48,14 @@ class CodeMirrorContainer extends React.Component {
       <div className="OuterContainer">
         <div className="CodeMirrorContainer">
           <TogetherJSButton/>
-          <h1>Problem instructions</h1>
-          <h3>Question prompt</h3>
+          <h2></h2>
           <div>
               <CodeMirrorComponent readOnly={false}/>
           </div>
-          <Problem problemNumber={1}></Problem>
         </div>
+        <div className="ProblemContainer">
+            <Problem problemNumber={1}></Problem>
+          </div>
       </div>
     );
   }

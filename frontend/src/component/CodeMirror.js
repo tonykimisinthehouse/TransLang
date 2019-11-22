@@ -61,7 +61,7 @@ print(length('CS 1301'))
   onChange={(editor, value) => {
     console.log('controlled', {value});
   }}
-/>
+  />
   )
 
 

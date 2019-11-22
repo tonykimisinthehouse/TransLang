@@ -1,5 +1,6 @@
 import React from 'react';
 import './MultipleChoice.css';
+import './index.css';
 
 class MultipleChoice extends React.Component {
     constructor() {
@@ -24,51 +25,63 @@ class MultipleChoice extends React.Component {
       event.preventDefault();
       this.state.tries++;
       if (this.state.tries <=2) {
-        alert(`${this.state.choice == this.props.correctChoice ? "Correct!" : "Try Again"}`);
+        alert(`${this.state.choice === this.props.correctChoice ? "Correct!" : "Try Again"}`);
       } else {
-        alert(`${this.state.choice == this.props.correctChoice ? "Correct! The answer is" : "The correct answer is:"} ${this.props.answer}`);
+        alert(`${this.state.choice === this.props.correctChoice ? "Correct! The answer is" : "The correct answer is:"} ${this.props.answer}`);
       }
     }
 
     render() {
       return (
       <div className="answer-choices">
+      <form>
+
+
+      <label htmlFor={this.props.id + "a"} className="form-check">{this.props.choiceA}
           <input
+            id={this.props.id + "a"}
             type="radio"
+            name="radio"
             value="A"
-            checked={this.state.choice === "A"}
             onChange={this.handleChange}
           />
-          <label htmlFor="option-A">{this.props.choiceA}</label>
+          <span className="checkmark"></span>
+        </label>
 
-          <input
-            id="answerChoiceB"
-            type="radio"
-            value="B"
-            checked={this.state.choice === "B"}
-            onChange={this.handleChange}
-          />
-          <label htmlFor="option-B">{this.props.choiceB}</label>
+        <label htmlFor={this.props.id + "b"}  className="form-check">{this.props.choiceB}
+            <input
+              id={this.props.id + "b"}
+              type="radio"
+              name="radio"
+              value="B"
+              onChange={this.handleChange}
+            />
+            <span className="checkmark"></span>
+          </label>
 
+        <label htmlFor={this.props.id + "c"}  className="form-check">{this.props.choiceC}
           <input
-            id="answerChoiceC"
+            id={this.props.id + "c"}
             type="radio"
+            name="radio"
             value="C"
-            checked={this.state.choice === "C"}
             onChange={this.handleChange}
           />
-          <label htmlFor="option-C">{this.props.choiceC}</label>
+          <span className="checkmark"></span>
+        </label>
 
+      <label htmlFor={this.props.id + "d"} className="form-check">{this.props.choiceD}
           <input
-            id="answerChoiceD"
+            id={this.props.id + "d"}
             type="radio"
+            name="radio"
             value="D"
-            checked={this.state.choice === "D"}
             onChange={this.handleChange}
           />
-          <label htmlFor="option-D">{this.props.choiceD}</label>
-
-          <button type="submit" className="submit-button" onClick={this.handleSubmit}>Submit your answer!</button>
+          <span className="checkmark"></span>
+      </label>
+      </form>
+          <button type="submit" className="submit-button" onClick={this.handleSubmit}>Submit</button>
         </div>
        )
     }
