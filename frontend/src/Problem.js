@@ -1,5 +1,8 @@
 import React from 'react';
 import MultipleChoice from './MultipleChoice';
+import {
+  Link
+} from "react-router-dom";
 
 class Problem extends React.Component {
     constructor() {
@@ -43,6 +46,11 @@ class Problem extends React.Component {
             <h3>Now work with your partner to fix the error!</h3>
 
             <button type="submit" onClick={this.handleSubmit}>Get Answer</button>
+            <Link to={"/" + this.props.nextQuestion}>
+              <button>
+                Next Question
+              </button>
+            </Link>
           </div>
        )
     }

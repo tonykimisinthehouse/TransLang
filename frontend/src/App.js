@@ -2,6 +2,12 @@ import React from 'react';
 import CodeMirrorComponent from './component/CodeMirror';
 import MultipleChoice from './MultipleChoice';
 import Problem from './Problem';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+
 
 import logo from './logo.svg';
 import './App.css';
@@ -53,9 +59,22 @@ class CodeMirrorContainer extends React.Component {
               <CodeMirrorComponent readOnly={false}/>
           </div>
         </div>
-        <div className="ProblemContainer">
-            <Problem problemNumber={1}></Problem>
-          </div>
+        <Router>
+          <Switch>
+            <Route path="/q1-1">
+              <div className="ProblemContainer">
+                <Problem nextQuestion="q1-2" problemNumber={1}></Problem>
+              </div>
+            </Route>
+            <Route path="/q1-2">
+             <div className="ProblemContainer">
+                <Problem problemNumber={2}></Problem>
+              </div>
+            </Route>
+          </Switch>
+        </Router>
+
+
       </div>
     );
   }
