@@ -7,7 +7,7 @@ import Select from 'react-select';
 function LangButton(props) {
     // needs arguments onClick (callback func) and lang (string)
     return (
-        <button classlabel="" onClick={props.onClick}>
+        <button className="" onClick={props.onClick}>
             {props.lang}
         </button>
     );
@@ -17,10 +17,8 @@ class Transcript extends React.Component {
     constructor(props) {
         super(props);
 
-        const region = 'eastus';
-        const subscriptionKey = '48775757e6594c94b69b29bd89de9fd9';
-        const language = 'en-US'; // TODO: accept this from props
-        // const target_languages // TODO: accept from props and add one by one
+        this.region = 'eastus';
+        this.subscriptionKey = '48775757e6594c94b69b29bd89de9fd9';
 
         // this.languageOptions = [
         //     {label: 'English (US)', recogKey: 'en-US', transKey: 'en'},
@@ -35,54 +33,146 @@ class Transcript extends React.Component {
         //     {label: '普通话', recogKey: 'zh-CN', transKey: 'zh-Hans'},
         // ];
 
-
-
         // ANOTHER APPROACH
-        const translation_config = SpeechTranslationConfig.fromSubscription(subscriptionKey, region);
-        translation_config.speechRecognitionLanguage = language;
-        translation_config.addTargetLanguage("de"); 
+        const backgroundlang = 'ar-EG';
+        const recoglang = 'en-US';
+        const translation_config = SpeechTranslationConfig.fromSubscription(this.subscriptionKey, this.region);
+        translation_config.speechRecognitionLanguage = recoglang;
+        translation_config.addTargetLanguage(backgroundlang);  // for now Arabic
         const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
 
         const trecognizer = new TranslationRecognizer(translation_config, audioConfig);
         
         // TODO: add common phrases (for better recog)
 
+        // {
+        //     backgroundLang: String
+        //     transcript: []
+        // }
         this.state = {
-            en_transcripts: [],
-            transcripts : [],
+            transcripts: {
+                backgroundlang: [],
+                recoglang: []
+            },
+            currentViewingLanguage: backgroundlang,
             gotFinal: false,
             trecognizer: trecognizer,
             recognizingCurrently: false,
             buttonLabel: "Recognize",
-            selectedSecondaryLanguage: null
+            backgroundlang: backgroundlang,
+            recoglang: recoglang,
+            switched_recoglang: false,
         }
+    }
 
+    switchTranscriptViewingLanguage() {
+
+    }
+
+    init_trecognizer(recoglang = "en-US", backgroundlang="ar-EG") {
+        const translation_config = SpeechTranslationConfig.fromSubscription(this.subscriptionKey, this.region);
+        translation_config.speechRecognitionLanguage = recoglang;
+        translation_config.addTargetLanguage(backgroundlang)
+        const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
+        const trecognizer = new TranslationRecognizer(translation_config, audioConfig);
+        this.setState({
+            backgroundlang: backgroundlang,
+            recoglang: recoglang,
+            trecognizer: trecognizer,
+        });
     }
 
     translate_recognize() {
         const recognizer = this.state.trecognizer;
         recognizer.recognizing = (s, e) => {
-            const recognizing = e.result.label;
+            console.log("RECOGNIZING");
+            const recognizing = e.result.text;
+            // console.log(recognizing);
+            // console.log("translations");
+            const translations = e.result.privTranslations.privMap;
+            // const language = translations.privKeys[0];
+            const translation = translations.privValues[0];
+            // console.log(language, translation);
+            // console.log(e.result.privTranslations.privMap);
             if (recognizing == "") { return; } // don't add empty recognized
             // console.log("RECOGNIZING");
-            const en_transcripts = this.state.en_transcripts.slice();
-            if (this.state.gotFinal == false) en_transcripts.pop();
+            var origs;
+            var backs;
+            var recogOrig;
+            var recogBack;
+            if (this.state.switched_recoglang === false) {
+                origs = this.state.transcripts.recoglang.slice();
+                backs = this.state.transcripts.backgroundlang.slice();
+                recogOrig = e.result.text;
+                recogBack = translations.privValues;
+                recogBack = recogBack[recogBack.length - 1];
+            }
+            else {
+                origs = this.state.transcripts.backgroundlang.slice();
+                backs = this.state.transcripts.recoglang.slice();
+                recogOrig = translations.privValues
+                recogOrig = recogOrig[recogOrig.length - 1];
+                recogBack = e.result.text;
+            }
+            console.log("gets here");
+            if (this.state.gotFinal == false) {
+                // en_transcripts.pop();
+                origs.pop();
+                backs.pop();
+            }
+            console.log("origs");
+            console.log(origs);
+            console.log("recogorig");
+            console.log(recogOrig);
             this.setState({
-                en_transcripts: en_transcripts.concat([recognizing]),
+                transcripts: {
+                    backgroundlang: backs.concat([recogBack]),
+                    recoglang: origs.concat([recogOrig]),
+                },
                 gotFinal: false,
             });
-
         }; 
         // recognizer.recognized = this.recognized_callback;
         recognizer.recognized = (s, e) => {
-            const recognized = e.result.label;
-            if (recognized == ""){ return; } // don't add empty recognized 
             // console.log("RECOGNIZED");
-            const en_transcripts = this.state.en_transcripts.slice();
-
-            if (this.state.gotFinal == false) en_transcripts.pop();
+            const recognized = e.result.text;
+            // console.log(recognized);
+            // console.log("translations");
+            const translations = e.result.privTranslations.privMap;
+            var language = translations.privKeys;
+            language = language[language.length - 1];
+            var translation = translations.privValues;
+            translation = translation[translation.length - 1];
+            // console.log(language, translation);
+            if (recognized == ""){ return; } // don't add empty recognized 
+            var origs;
+            var backs;
+            var recogOrig;
+            var recogBack;
+            if (this.state.switched_recoglang === false) {
+                origs = this.state.transcripts.recoglang.slice();
+                backs = this.state.transcripts.backgroundlang.slice();
+                recogOrig = e.result.text;
+                recogBack = translations.privValues;
+                recogBack = recogBack[recogBack.length - 1];
+            }
+            else {
+                origs = this.state.transcripts.backgroundlang.slice();
+                backs = this.state.transcripts.recoglang.slice();
+                recogOrig = translations.privValues
+                recogOrig = recogOrig[recogOrig.length - 1];
+                recogBack = e.result.text;
+            }
+            if (this.state.gotFinal == false) {
+                // en_transcripts.pop();
+                origs.pop();
+                backs.pop();
+            }
             this.setState({
-                en_transcripts: en_transcripts.concat([recognized]),
+                transcripts: {
+                    backgroundlang: backs.concat([recogBack]),
+                    recoglang: origs.concat([recogOrig]),
+                },
                 gotFinal: true,
             });
 
@@ -94,12 +184,14 @@ class Transcript extends React.Component {
     stop_translating() {
         const recognizer = this.state.trecognizer;
         recognizer.stopContinuousRecognitionAsync();
+        this.setState({
+            gotFinal: true,
+        })
     }
 
     toggle_recognizing() {
         const startLabel = "Recognize";
         const stopLabel = "Stop";
-
 
         if (this.state.recognizingCurrently) { // already recognizing
             this.stop_translating();
@@ -117,33 +209,44 @@ class Transcript extends React.Component {
     }
 
 
-    handleLangSelect = selectedSecondaryLanguage => {
-        this.setState({ selectedSecondaryLanguage });
-        console.log("Option Selected:", selectedSecondaryLanguage);
+    handleLangSelect = backgroundlang => {
+        this.setState({ backgroundlang });
+        console.log("Option Selected:", backgroundlang);
     }
 
     selectedLang(secondaryLang)  {
         console.log(secondaryLang);
         this.setState({
-            selectedSecondaryLanguage: secondaryLang,
+            backgroundlang: secondaryLang,
         });
     }
 
     render() {
-
-        const transcripts = this.state.en_transcripts.slice();
-        console.log("transcripts");
-        console.log(transcripts);
-        const wordsOut = transcripts.map((step, move) => {
+        const speakingPerson = "Haard"; // TODO: get this from server 
+        var origs;
+        var backs;
+        if (this.state.switched_recoglang === false) {
+            origs = this.state.transcripts.recoglang.slice();
+            // console.log("origs");
+            // console.log(origs);
+            backs = this.state.transcripts.backgroundlang.slice();
+        }
+        else {
+            origs = this.state.transcripts.backgroundlang.slice();
+            backs = this.state.transcripts.recoglang.slice();
+        }
+        // console.log("transcripts");
+        // console.log(origs);
+        const wordsOut = backs.map((step, move) => {
             return (
-                <a transKey={move}>
-                    <b>Haard</b>: {step} <br></br>
+                <a key={move}>
+                    <b>{speakingPerson}</b>: {step} <br></br>
                 </a>
             );
         });
         // const wordsOut = "Nothing";
 
-        // return <div classlabel="Container">hello</div>;
+        // return <div className="Container">hello</div>;
 
         // fancy react scroll: https://www.npmjs.com/package/react-scroll (future)
 
@@ -164,16 +267,21 @@ class Transcript extends React.Component {
 
         // <Select
         //     options={this.languageOptions}
-        //     recogKey={this.state.selectedSecondaryLanguage}
+        //     recogKey={this.state.backgroundlang}
         //     onChange={this.handleLangSelect}
         // />
 
         return (
-            <div classlabel="Transcript">
-                <button onClick={() => this.toggle_recognizing()}>
-                    {this.state.buttonLabel}
-                </button>
-                <div classlabel="scrollableDialogues" style={{overflowY: 'auto'}}>
+            <div className="Transcript">
+                <div className="transcriptButtonBar">
+                    <button onClick={() => this.toggle_recognizing()}>
+                        {this.state.buttonLabel}
+                    </button>
+                    
+                </div>
+                <br></br>
+
+                <div className="scrollableDialogues" style={{overflowY: 'auto'}}>
                     {wordsOut}
                 </div>
             </div>

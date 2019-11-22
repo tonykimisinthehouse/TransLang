@@ -54,6 +54,10 @@ body {
   /* overflow-y: auto; */
 }
 
+.transcriptButtonBar {
+  flex-direction: row;
+}
+
 .scrollableDialogues {
   overflow-y: scroll;
   height:93%;
