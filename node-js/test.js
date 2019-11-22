@@ -81,9 +81,11 @@ function getTranscript(auth) {
     if (err) return console.log('The API returned an error: ' + err);
     const rows = res.data.values;
     if (rows.length) {
-      // Print column A
+      //
       console.log(rows);
       rows.map((row) => {
+        //row[0] = Name
+        //row[x] = language in col x
         console.log(`${row[0]}: ${row[2]}`);
       });
     } else {
@@ -101,9 +103,11 @@ function addTranscript(auth) {
   const sheets = google.sheets({version: 'v4', auth});
   sheets.spreadsheets.values.update({
     spreadsheetId: '1l5BsM8-ejfncXU9uLz8kn6DD4YLTGT3_pyra4LJZMto',
+    //the cell at which you want to start adding
     range: 'A3',
     valueInputOption: 'USER_ENTERED',
     resource: {
+      //send values as a 2d array [[row1col1, row1col2], [row2col1, row2col2]]
       "values": [
         ['tony', 'korean', 'spanish', 'chinese', 'arabic'],
         ['haard', 'k', 's', 'c', 'a']
