@@ -22,18 +22,18 @@ class Transcript extends React.Component {
         const language = 'en-US'; // TODO: accept this from props
         // const target_languages // TODO: accept from props and add one by one
 
-        this.languageOptions = [
-            {label: 'English (US)', recogKey: 'en-US', transKey: 'en'},
-            {label: 'English (IN)', recogKey: 'en-IN', transKey: 'en'},
-            {label: 'Deutsche', recogKey: 'de-DE', transKey: 'de'},
-            {label: 'عربى', recogKey: 'ar-EG', transKey: 'ar'},
-            {label: 'español', recogKey: 'es-MX', transKey: 'es'},
-            {label: 'français', recogKey: 'fr-FR', transKey: 'fr'},
-            {label: 'हिन्दी', recogKey: 'hi-IN', transKey: 'hi'},
-            {label: '한국어', recogKey: 'ko-KR', transKey: 'ko'},
-            {label: 'русский', recogKey: 'ru-RU', transKey: 'ru'},
-            {label: '普通话', recogKey: 'zh-CN', transKey: 'zh-Hans'},
-        ];
+        // this.languageOptions = [
+        //     {label: 'English (US)', recogKey: 'en-US', transKey: 'en'},
+        //     {label: 'English (IN)', recogKey: 'en-IN', transKey: 'en'},
+        //     {label: 'Deutsche', recogKey: 'de-DE', transKey: 'de'},
+        //     {label: 'عربى', recogKey: 'ar-EG', transKey: 'ar'},
+        //     {label: 'español', recogKey: 'es-MX', transKey: 'es'},
+        //     {label: 'français', recogKey: 'fr-FR', transKey: 'fr'},
+        //     {label: 'हिन्दी', recogKey: 'hi-IN', transKey: 'hi'},
+        //     {label: '한국어', recogKey: 'ko-KR', transKey: 'ko'},
+        //     {label: 'русский', recogKey: 'ru-RU', transKey: 'ru'},
+        //     {label: '普通话', recogKey: 'zh-CN', transKey: 'zh-Hans'},
+        // ];
 
 
 
@@ -162,18 +162,17 @@ class Transcript extends React.Component {
         //     );
         // });
 
+        // <Select
+        //     options={this.languageOptions}
+        //     recogKey={this.state.selectedSecondaryLanguage}
+        //     onChange={this.handleLangSelect}
+        // />
+
         return (
             <div classlabel="Transcript">
-                <div classlabel="transcriptRow">
-                    <button onClick={() => this.toggle_recognizing()}>
-                        {this.state.buttonLabel}
-                    </button>
-                    <Select
-                        options={this.languageOptions}
-                        recogKey={this.state.selectedSecondaryLanguage}
-                        onChange={this.handleLangSelect}
-                    />
-                </div>
+                <button onClick={() => this.toggle_recognizing()}>
+                    {this.state.buttonLabel}
+                </button>
                 <div classlabel="scrollableDialogues" style={{overflowY: 'auto'}}>
                     {wordsOut}
                 </div>
