@@ -2,6 +2,7 @@ import React from 'react';
 
 import { TranslationRecognizer, SpeechTranslationConfig, AudioConfig, ResultReason, } from 'microsoft-cognitiveservices-speech-sdk';
 
+import { Dropdown } from 'semantic-ui-react';
 // TODO: convert this to directly using microsoft-cognitiveservices-speech-sdk
 /*Links:
 https://docs.microsoft.com/en-us/javascript/api/overview/azure/speech-service?view=azure-node-latest
@@ -11,7 +12,7 @@ https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/sampl
 function LangButton(props) {
     // needs arguments onClick (callback func) and lang (string)
     return (
-        <button className="" onClick={props.onClick}>
+        <button classtext="" onClick={props.onClick}>
             {props.lang}
         </button>
     );
@@ -26,20 +27,18 @@ class Transcript extends React.Component {
         const language = 'en-US'; // TODO: accept this from props
         // const target_languages // TODO: accept from props and add one by one
 
-        /*
-        Languages:
-        en-US (english) | en 
-        ar-EG (Arabic)  | ar
-        es-MX (Spanish) | es
-
-        Scenario:
-        Speaker 1: Arabic and english
-        Speaker 2: Spanish and english
-
-        Other languages:
-        fr-FR (French)  | fr
-        zh-CN (Chinese) | zh-Hans
-        */
+        this.languageOptions = [
+            {text: 'English (US)', value: 'en-US', key: 'en-US'},
+            {text: 'English (IN)', value: 'en-IN', key: 'en-IN'},
+            {text: 'Deutsche', value: 'de-DE', key: 'de-DE'},
+            {text: 'عربى', value: 'ar-EG', key: 'ar-EG'},
+            {text: 'español', value: 'es-MX', key: 'es-MX'},
+            {text: 'français', value: 'fr-FR', key: 'fr-FR'},
+            {text: 'हिन्दी', value: 'hi-IN', key: 'hi-IN'},
+            {text: '한국어', value: 'ko-KR', key: 'ko-KR'},
+            {text: 'русский', value: 'ru-RU', key: 'ru-RU'},
+            {text: '普通话', value: 'zh-CN', key: 'zh-CH'},
+        ];
 
         // ANOTHER APPROACH
         const translation_config = SpeechTranslationConfig.fromSubscription(subscriptionKey, region);
@@ -58,6 +57,8 @@ class Transcript extends React.Component {
             trecognizer: trecognizer,
             recognizingCurrently: false,
             buttonLabel: "Recognize",
+            selectedLanguages: [],
+            
         }
 
     }
@@ -119,6 +120,10 @@ class Transcript extends React.Component {
         }
     }
 
+    selectedLangs(langlst)  {
+        console.log(langlst);
+    }
+
     render() {
 
         const transcripts = this.state.en_transcripts.slice();
@@ -133,16 +138,31 @@ class Transcript extends React.Component {
         });
         // const wordsOut = "Nothing";
 
-        // return <div className="Container">hello</div>;
+        // return <div classtext="Container">hello</div>;
 
         // fancy react scroll: https://www.npmjs.com/package/react-scroll (future)
 
         return (
-            <div className="Transcript">
-                <button onClick={() => this.toggle_recognizing()}>{this.state.buttonLabel}</button>
+            <div classtext="Transcript">
+                <div classtext="transcriptRow">
+                    <button onClick={() => this.toggle_recognizing()}>
+                        {this.state.buttonLabel}
+                    </button>
+                    
+                </div>
+                
+                <Dropdown
+                    placeholder="Languages"
+                    fluid
+                    multiple
+                    selection
+                    options={this.languageOptions}
+                // onSelectOptions={this.selectedLangs} 
+                />
+
                 <br></br>
                 <br></br>
-                <div className="scrollableDialogues" style={{overflowY: 'auto'}}>
+                <div classtext="scrollableDialogues" style={{overflowY: 'auto'}}>
                     {wordsOut}
                 </div>
             </div>
