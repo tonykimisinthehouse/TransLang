@@ -2,17 +2,12 @@ import React from 'react';
 
 import { TranslationRecognizer, SpeechTranslationConfig, AudioConfig, ResultReason, } from 'microsoft-cognitiveservices-speech-sdk';
 
-import { Dropdown } from 'semantic-ui-react';
-// TODO: convert this to directly using microsoft-cognitiveservices-speech-sdk
-/*Links:
-https://docs.microsoft.com/en-us/javascript/api/overview/azure/speech-service?view=azure-node-latest
-https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/js/browser
-*/
+import Select from 'react-select';
 
 function LangButton(props) {
     // needs arguments onClick (callback func) and lang (string)
     return (
-        <button classtext="" onClick={props.onClick}>
+        <button classlabel="" onClick={props.onClick}>
             {props.lang}
         </button>
     );
@@ -28,17 +23,19 @@ class Transcript extends React.Component {
         // const target_languages // TODO: accept from props and add one by one
 
         this.languageOptions = [
-            {text: 'English (US)', value: 'en-US', key: 'en-US'},
-            {text: 'English (IN)', value: 'en-IN', key: 'en-IN'},
-            {text: 'Deutsche', value: 'de-DE', key: 'de-DE'},
-            {text: 'عربى', value: 'ar-EG', key: 'ar-EG'},
-            {text: 'español', value: 'es-MX', key: 'es-MX'},
-            {text: 'français', value: 'fr-FR', key: 'fr-FR'},
-            {text: 'हिन्दी', value: 'hi-IN', key: 'hi-IN'},
-            {text: '한국어', value: 'ko-KR', key: 'ko-KR'},
-            {text: 'русский', value: 'ru-RU', key: 'ru-RU'},
-            {text: '普通话', value: 'zh-CN', key: 'zh-CH'},
+            {label: 'English (US)', recogKey: 'en-US', transKey: 'en'},
+            {label: 'English (IN)', recogKey: 'en-IN', transKey: 'en'},
+            {label: 'Deutsche', recogKey: 'de-DE', transKey: 'de'},
+            {label: 'عربى', recogKey: 'ar-EG', transKey: 'ar'},
+            {label: 'español', recogKey: 'es-MX', transKey: 'es'},
+            {label: 'français', recogKey: 'fr-FR', transKey: 'fr'},
+            {label: 'हिन्दी', recogKey: 'hi-IN', transKey: 'hi'},
+            {label: '한국어', recogKey: 'ko-KR', transKey: 'ko'},
+            {label: 'русский', recogKey: 'ru-RU', transKey: 'ru'},
+            {label: '普通话', recogKey: 'zh-CN', transKey: 'zh-Hans'},
         ];
+
+
 
         // ANOTHER APPROACH
         const translation_config = SpeechTranslationConfig.fromSubscription(subscriptionKey, region);
@@ -57,8 +54,7 @@ class Transcript extends React.Component {
             trecognizer: trecognizer,
             recognizingCurrently: false,
             buttonLabel: "Recognize",
-            selectedLanguages: [],
-            
+            selectedSecondaryLanguage: null
         }
 
     }
@@ -66,7 +62,7 @@ class Transcript extends React.Component {
     translate_recognize() {
         const recognizer = this.state.trecognizer;
         recognizer.recognizing = (s, e) => {
-            const recognizing = e.result.text;
+            const recognizing = e.result.label;
             if (recognizing == "") { return; } // don't add empty recognized
             // console.log("RECOGNIZING");
             const en_transcripts = this.state.en_transcripts.slice();
@@ -79,7 +75,7 @@ class Transcript extends React.Component {
         }; 
         // recognizer.recognized = this.recognized_callback;
         recognizer.recognized = (s, e) => {
-            const recognized = e.result.text;
+            const recognized = e.result.label;
             if (recognized == ""){ return; } // don't add empty recognized 
             // console.log("RECOGNIZED");
             const en_transcripts = this.state.en_transcripts.slice();
@@ -120,8 +116,17 @@ class Transcript extends React.Component {
         }
     }
 
-    selectedLangs(langlst)  {
-        console.log(langlst);
+
+    handleLangSelect = selectedSecondaryLanguage => {
+        this.setState({ selectedSecondaryLanguage });
+        console.log("Option Selected:", selectedSecondaryLanguage);
+    }
+
+    selectedLang(secondaryLang)  {
+        console.log(secondaryLang);
+        this.setState({
+            selectedSecondaryLanguage: secondaryLang,
+        });
     }
 
     render() {
@@ -131,38 +136,45 @@ class Transcript extends React.Component {
         console.log(transcripts);
         const wordsOut = transcripts.map((step, move) => {
             return (
-                <a key={move}>
+                <a transKey={move}>
                     <b>Haard</b>: {step} <br></br>
                 </a>
             );
         });
         // const wordsOut = "Nothing";
 
-        // return <div classtext="Container">hello</div>;
+        // return <div classlabel="Container">hello</div>;
 
         // fancy react scroll: https://www.npmjs.com/package/react-scroll (future)
 
+        // <Dropdown
+        //     placeholder="Languages"
+        //     fluid
+        //     multiple
+        //     selection
+        //     options={this.languageOptions}
+        // // onSelectOptions={this.selectedLangs} 
+        // />
+
+        // const options = self.languageOptions.map((step, move) => {
+        //     return (
+        //         <option recogKey
+        //     );
+        // });
+
         return (
-            <div classtext="Transcript">
-                <div classtext="transcriptRow">
+            <div classlabel="Transcript">
+                <div classlabel="transcriptRow">
                     <button onClick={() => this.toggle_recognizing()}>
                         {this.state.buttonLabel}
                     </button>
-                    
+                    <Select
+                        options={this.languageOptions}
+                        recogKey={this.state.selectedSecondaryLanguage}
+                        onChange={this.handleLangSelect}
+                    />
                 </div>
-                
-                <Dropdown
-                    placeholder="Languages"
-                    fluid
-                    multiple
-                    selection
-                    options={this.languageOptions}
-                // onSelectOptions={this.selectedLangs} 
-                />
-
-                <br></br>
-                <br></br>
-                <div classtext="scrollableDialogues" style={{overflowY: 'auto'}}>
+                <div classlabel="scrollableDialogues" style={{overflowY: 'auto'}}>
                     {wordsOut}
                 </div>
             </div>
