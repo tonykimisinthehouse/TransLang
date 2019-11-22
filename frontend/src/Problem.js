@@ -1,5 +1,8 @@
 import React from 'react';
 import MultipleChoice from './MultipleChoice';
+import {
+  Link
+} from "react-router-dom";
 
 class Problem extends React.Component {
     constructor() {
@@ -30,19 +33,24 @@ class Problem extends React.Component {
 
       return (
           <div>
+            <h2>This function counts the length of the parameter that is passed in, but there is an error! Trace the function to answer the questions and then edit the error.</h2>
             <div id="Question1">
-                <p>This function has an error. The goal is meant to count the length of the parameter that is passed in.</p>
-                <p>What will output when we run the code as it is currently?</p>
-                <MultipleChoice answer={answer1} correctChoice={correctChoice1} choiceA={MC1A} choiceB={MC1B} choiceC={MC1C} choiceD={MC1D}/>
+                <h3>What will output when we run the code as it is currently?</h3>
+                <MultipleChoice answer={answer1} correctChoice={correctChoice1} choiceA={MC1A} choiceB={MC1B} choiceC={MC1C} choiceD={MC1D} id={"answerChoice1"}/>
             </div>
 
             <div id="Question2">
-                <p>Identify which line has the error.</p>
-                <MultipleChoice answer={answer2} correctChoice={correctChoice2} choiceA={MC2A} choiceB={MC2B} choiceC={MC2C} choiceD={MC2D}/>
+                <h3>Identify which line has the error.</h3>
+                <MultipleChoice answer={answer2} correctChoice={correctChoice2} choiceA={MC2A} choiceB={MC2B} choiceC={MC2C} choiceD={MC2D} id={"answerChoice2"}/>
             </div>
-            <p>Now work with your partner to fix the error!</p>
+            <h3>Now work with your partner to fix the error!</h3>
 
             <button type="submit" onClick={this.handleSubmit}>Get Answer</button>
+            <Link to={"/" + this.props.nextQuestion}>
+              <button>
+                Next Question
+              </button>
+            </Link>
           </div>
        )
     }

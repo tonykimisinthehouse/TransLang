@@ -2,6 +2,12 @@ import React from 'react';
 import CodeMirrorComponent from './component/CodeMirror';
 import MultipleChoice from './MultipleChoice';
 import Problem from './Problem';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+
 
 import logo from './logo.svg';
 import './App.css';
@@ -17,7 +23,7 @@ function App() {
     
     <div>
       <div className="App">
-        <header className="App-header">Header</header>
+        <header className="App-header">EdTech CS 1301 Tracing</header>
         <div className="three-main-columns">
           <Resources/>
           <CodeMirrorContainer/>
@@ -40,13 +46,27 @@ class CodeMirrorContainer extends React.Component {
       <div className="OuterContainer">
         <div className="CodeMirrorContainer">
           <TogetherJSButton/>
-          <h1>Problem instructions</h1>
-          <h3>Question prompt</h3>
+          <h2></h2>
           <div>
               <CodeMirrorComponent readOnly={false}/>
           </div>
-          <Problem problemNumber={1}></Problem>
         </div>
+        <Router>
+          <Switch>
+            <Route path="/q1-1">
+              <div className="ProblemContainer">
+                <Problem nextQuestion="q1-2" problemNumber={1}></Problem>
+              </div>
+            </Route>
+            <Route path="/q1-2">
+             <div className="ProblemContainer">
+                <Problem problemNumber={2}></Problem>
+              </div>
+            </Route>
+          </Switch>
+        </Router>
+
+
       </div>
     );
   }
