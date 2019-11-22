@@ -10,13 +10,19 @@ body {
 
 .App-header {
   background-color: #282c34;
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(10px + 2vmin); */
   color: white;
-  height: 5%;
+  display: flex;
+  height: 8%;
+}
+
+h1 {
+  flex: 1; text-align: center;
+  margin: 10px;
 }
 
 .App {
@@ -28,7 +34,7 @@ body {
 .three-main-columns {
   display:flex;
   flex-direction:row;
-  height: 95%;
+  height: 92%;
 }
 
 .CodeMirrorContainer {
@@ -40,7 +46,7 @@ body {
 .OuterContainer {
   margin: 0;
   height: 100%;
-  width: 60%;
+  width: 80%;
   /* max- */
   background: #FCEACF;
 }
@@ -56,7 +62,7 @@ body {
 
 .scrollableDialogues {
   overflow-y: scroll;
-  height:93%;
+  height:92%;
 }
 
 .Resources {
@@ -70,23 +76,53 @@ body {
 }
 
 .TogetherJSButton {
-  float: right;
+  position: absolute;
+  right: 0;
   padding: 10px;
   border: none;
-  background: #31C28E;
-  border-radius: 8px;
+  background: rgb(104, 191, 159);
+  border-radius: 50px;
   color: white;
   font-weight: bold;
+  margin: 10px;
+}
+
+.TogetherJSButton:hover {
+  background: rgb(50, 199, 145);
+  transition: 0.3s;
 }
 
 button {
   padding: 10px;
+  margin: 5px 5px 5px 0px;
   border: none;
-  background: #31C28E;
-  border-radius: 8px;
+  background: rgb(180, 121, 199);
+  border-radius: 50px;
   font-size: 12px;
   color: white;
   font-weight: bold;
+}
+
+button:hover {
+  background: rgb(187, 94, 215);
+  transition: 0.3s;
+}
+
+.nextButton {
+  float: right;
+  padding: 10px;
+  margin: 5px 5px 5px 0px;
+  border: none;
+  background: rgb(59, 127, 211);
+  border-radius: 50px;
+  font-size: 12px;
+  color: white;
+  font-weight: bold;
+}
+
+.nextButton:hover {
+  background: rgb(26, 121, 237);
+  transition: 0.3s;
 }
 
 /* code {

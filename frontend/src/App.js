@@ -22,9 +22,11 @@ function App() {
   return (
     <div>
       <div className="App">
-        <header className="App-header">EdTech CS 1301 Tracing</header>
+        <div className="App-header">
+          <h1>EdTech CS 1301 Tracing</h1>
+          <TogetherJSButton/>
+        </div>
         <div className="three-main-columns">
-          <Resources/>
           <CodeMirrorContainer/>
           <Transcript
             languages = {
@@ -52,24 +54,41 @@ class CodeMirrorContainer extends React.Component {
   render() {
     return (
       <div className="OuterContainer">
-        <div className="CodeMirrorContainer">
-          <TogetherJSButton/>
+          {/* <TogetherJSButton/> */}
           <h2></h2>
-          <div>
-              <CodeMirrorComponent readOnly={false}/>
-          </div>
-        </div>
+
+
         <Router>
           <Switch>
             <Route path="/q1-1">
+              <div className="CodeMirrorContainer">
+                  <CodeMirrorComponent defaultValue={`def length(item):
+  if not item:
+    return 1
+  else:
+    return 1 + length(item[1:])
+
+print(length('CS 1301'))
+                  `} readOnly={false}/>
+              </div>
               <div className="ProblemContainer">
                 <Problem nextQuestion="q1-2" problemNumber={1}></Problem>
-              </div>
+            </div>
             </Route>
+
             <Route path="/q1-2">
+            <div className="CodeMirrorContainer">
+                <CodeMirrorComponent defaultValue={`def multiply(a,b):
+    if a == 0 or b == 0:
+        return 0
+    else:
+        return a + multiply(a-1, b)
+`} readOnly={false}/>
+              </div>
              <div className="ProblemContainer">
                 <Problem problemNumber={2}></Problem>
               </div>
+
             </Route>
           </Switch>
         </Router>
