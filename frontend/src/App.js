@@ -1,6 +1,8 @@
 import React from 'react';
 import CodeMirrorComponent from './component/CodeMirror';
 import MultipleChoice from './MultipleChoice';
+import LoopsProblem from './LoopsProblem';
+import OtherProblem from './OtherProblem';
 import Problem from './Problem';
 import {
   BrowserRouter as Router,
@@ -60,6 +62,8 @@ class CodeMirrorContainer extends React.Component {
 
         <Router>
           <Switch>
+
+
             <Route path="/q1-1">
               <div className="CodeMirrorContainer">
                   <CodeMirrorComponent defaultValue={`def length(item):
@@ -82,14 +86,41 @@ print(length('CS 1301'))
     if a == 0 or b == 0:
         return 0
     else:
-        return a + multiply(a-1, b)
-`} readOnly={false}/>
+        return a + multiply(a-1, b)`} readOnly={false}/>
               </div>
              <div className="ProblemContainer">
-                <Problem problemNumber={2}></Problem>
+                <Problem nextQuestion="q1-3" problemNumber={2}></Problem>
               </div>
-
             </Route>
+
+            <Route path="/q1-3">
+            <div className="CodeMirrorContainer">
+<CodeMirrorComponent defaultValue={`def funWithLists(listparam):
+  for i in range(len(listparam)):
+    if type(i) == int:
+    	listparam[i] = listparam[i] * 2
+  return listparam
+
+aList = [1, 2, "hello", 9]
+funWithLists(aList)
+print(aList)`} readOnly={false}/>
+              </div>
+             <div className="ProblemContainer">
+                <OtherProblem nextQuestion="q1-4"></OtherProblem>
+              </div>
+            </Route>
+
+            <Route path="/q1-4">
+            <div className="CodeMirrorContainer">
+<CodeMirrorComponent defaultValue={`aString = “goFalcons”
+for i in aString:
+	print(i)`} readOnly={false}/>
+              </div>
+             <div className="ProblemContainer">
+                <LoopsProblem nextQuestion="q1-4"></LoopsProblem>
+              </div>
+            </Route>
+
           </Switch>
         </Router>
 

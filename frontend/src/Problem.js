@@ -15,6 +15,7 @@ class Problem extends React.Component {
     handleSubmit(event) {
         alert('Answer: line 3 should be "return 0"')
     }
+
     render() {
         console.log('change question Number');
         var MC1A = 6;
@@ -45,7 +46,8 @@ class Problem extends React.Component {
           MC2D = 5;
           correctChoice2 = "D";
           answer2 = 5;
-        }
+      }
+
 
       return (
           <div>
