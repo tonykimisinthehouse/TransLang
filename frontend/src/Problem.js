@@ -31,6 +31,22 @@ class Problem extends React.Component {
         var correctChoice2 = "B";
         var answer2 = 3;
 
+        if (this.props.problemNumber === 2) {
+          MC1A = 5;
+          MC1B = 1;
+          MC1C = 3;
+          MC1D = 6;
+          correctChoice1 = "C";
+          answer1 = 3;
+
+          MC2A = 2;
+          MC2B = 3;
+          MC2C = 4;
+          MC2D = 5;
+          correctChoice2 = "D";
+          answer2 = 5;
+        }
+
       return (
           <div>
             <h2>This function counts the length of the parameter that is passed in, but there is an error! Trace the function to answer the questions and then edit the error.</h2>
@@ -45,10 +61,10 @@ class Problem extends React.Component {
             </div>
             <h3>Now work with your partner to fix the error!</h3>
 
-            <button type="submit" onClick={this.handleSubmit}>Get Answer</button>
+            <button type="submit" onClick={this.handleSubmit}>Check Your Answer</button>
             <Link to={"/" + this.props.nextQuestion}>
-              <button>
-                Next Question
+              <button className="nextButton">
+                Go to next question
               </button>
             </Link>
           </div>

@@ -21,15 +21,22 @@ const options = {
 };
 
 function CodeMirrorComponent(props) {
-  let defaultValue =
-  `def length(item):
+  let defaultValue;
+
+  if (typeof (props.defaultValue) == "undefined") {
+    defaultValue =
+    `
+    def length(item):
   if not item:
     return 1
   else:
     return 1 + length(item[1:])
 
 print(length('CS 1301'))
-  `
+    `
+  } else {
+    defaultValue = props.defaultValue;
+  }
 
   const [value, setValue] = useState(
     defaultValue);
