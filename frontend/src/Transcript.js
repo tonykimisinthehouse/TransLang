@@ -54,7 +54,7 @@ class Transcript extends React.Component {
                 backgroundlang: [],
                 recoglang: []
             },
-            currentViewingLanguage: backgroundlang,
+            currentViewingLanguage: recoglang,
             gotFinal: false,
             trecognizer: trecognizer,
             recognizingCurrently: false,
@@ -64,11 +64,7 @@ class Transcript extends React.Component {
             switched_recoglang: false,
         }
     }
-
-    switchTranscriptViewingLanguage() {
-
-    }
-
+    
     init_trecognizer(recoglang = "en-US", backgroundlang="ar-EG") {
         const translation_config = SpeechTranslationConfig.fromSubscription(this.subscriptionKey, this.region);
         translation_config.speechRecognitionLanguage = recoglang;
@@ -221,10 +217,22 @@ class Transcript extends React.Component {
         });
     }
 
+    switch_currentViewingLanguage() {
+        const backlang = "ar-EG";
+        const origlang = "en-US";
+        const newLang = (this.state.currentViewingLanguage === backlang) ? origlang: backlang;
+        this.setState({
+            currentViewingLanguage: newLang,
+        });
+    }
+
     render() {
         const speakingPerson = "Haard"; // TODO: get this from server 
         var origs;
         var backs;
+        const symbol = this.state.currentViewingLanguage;
+        const viewinglanguage = (symbol === "ar-EG") ? "عربى" : "English";
+
         if (this.state.switched_recoglang === false) {
             origs = this.state.transcripts.recoglang.slice();
             // console.log("origs");
@@ -237,7 +245,10 @@ class Transcript extends React.Component {
         }
         // console.log("transcripts");
         // console.log(origs);
-        const wordsOut = backs.map((step, move) => {
+        
+        const words = (symbol === "ar-EG") ? backs : origs;
+
+        const wordsOut = words.map((step, move) => {
             return (
                 <a key={move}>
                     <b>{speakingPerson}</b>: {step} <br></br>
@@ -271,13 +282,16 @@ class Transcript extends React.Component {
         //     onChange={this.handleLangSelect}
         // />
 
+
         return (
             <div className="Transcript">
                 <div className="transcriptButtonBar">
                     <button onClick={() => this.toggle_recognizing()}>
                         {this.state.buttonLabel}
                     </button>
-                    
+                    <button onClick={() => this.switch_currentViewingLanguage()}>
+                        {viewinglanguage}
+                    </button>
                 </div>
                 <br></br>
 
