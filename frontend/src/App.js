@@ -10,8 +10,6 @@ import './App.css';
 import Transcript from './Transcript'
 
 
-import FirebaseMirror from './component/FirebaseMirror';
-
 
 function App() {
 

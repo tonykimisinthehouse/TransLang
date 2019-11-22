@@ -1,15 +1,9 @@
 # TransLang Meta Repo
 
-## First, let's install `meta`
-```
-npm i -g meta
-```
+## In order to run the frontend, run this command on your terminal
 
-## To sync the additional repos defined in the .meta file, run:
 ```
-meta git update
+cd frontend && npm install && npm start
 ```
 
 
-References:
-* https://medium.com/@patrickleet/mono-repo-or-multi-repo-why-choose-one-when-you-can-have-both-e9c77bd0c668
