@@ -1,17 +1,19 @@
 import React from 'react';
 
-import { TranslationRecognizer, SpeechTranslationConfig, AudioConfig, ResultReason, TranslationRecognitionEventArgs, } from 'microsoft-cognitiveservices-speech-sdk';
+import { TranslationRecognizer, SpeechTranslationConfig, AudioConfig, } from 'microsoft-cognitiveservices-speech-sdk';
 
 // import Select from 'react-select';
 
-function LangButton(props) {
-    // needs arguments onClick (callback func) and lang (string)
-    return (
-        <button className="" onClick={props.onClick}>
-            {props.lang}
-        </button>
-    );
-}
+import Emoji from "a11y-react-emoji";
+
+// function LangButton(props) {
+//     // needs arguments onClick (callback func) and lang (string)
+//     return (
+//         <button className="" onClick={props.onClick}>
+//             {props.lang}
+//         </button>
+//     );
+// }
 
 class Transcript extends React.Component {
     constructor(props) {
@@ -106,7 +108,6 @@ class Transcript extends React.Component {
         const recognizer = this.state.trecognizer;
         recognizer.recognizing = (s, e) => {
             console.log("RECOGNIZING");
-            const recognizing = e.result.text;
             const popLast = (this.state.gotFinal === false) ? true : false;
             const newTranscripts = this.updateTranscripts(e, popLast);
 
@@ -118,7 +119,6 @@ class Transcript extends React.Component {
         // recognizer.recognized = this.recognized_callback;
         recognizer.recognized = (s, e) => {
             console.log("RECOGNIZED");
-            const recognized = e.result.text;
             const popLast = (this.state.gotFinal === false) ? true : false;
             const newTranscripts = this.updateTranscripts(e, popLast);
 
@@ -222,27 +222,10 @@ class Transcript extends React.Component {
 
     render() {
         const speakingPerson = "> "; // TODO: get this from server 
-        var origs;
-        var backs;
         const symbol = this.state.currentViewingLanguage;
         const viewinglanguage = (symbol === this.state.backgroundlang) ? this.state.recoglang.label : this.state.backgroundlang.label;
 
         console.log(this.state.transcripts)
-
-        // if (this.state.switched_recoglang === false) {
-        //     origs = this.state.transcripts.recoglang.slice();
-        //     // console.log("origs");
-        //     // console.log(origs);
-        //     backs = this.state.transcripts.backgroundlang.slice();
-        // }
-        // else {
-        //     origs = this.state.transcripts.backgroundlang.slice();
-        //     backs = this.state.transcripts.recoglang.slice();
-        // }
-        // // console.log("transcripts");
-        // // console.log(origs);
-        
-        // const words = (symbol === this.defaultTranslate) ? backs : origs;
 
         const words = this.get_specified_scripts(symbol);
         const wordsOut = words.map((step, move) => {
@@ -290,7 +273,7 @@ class Transcript extends React.Component {
                         {viewinglanguage}
                     </button>
                     <button disabled onClick={() => this.toggle_recoglang()}>
-                        🎤 in {this.state.recoglang.label}
+                        <Emoji symbol="🎤" /> in {this.state.recoglang.label}
                     </button>
                 </div>
                 <br></br>

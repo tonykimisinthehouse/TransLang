@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "a11y-react-emoji": "^1.1.1",
     "codemirror": "^5.49.2",
     "firebase": "^7.2.3",
     "microsoft-cognitiveservices-speech-sdk": "^1.8.0",
