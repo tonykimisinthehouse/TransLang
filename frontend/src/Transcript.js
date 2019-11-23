@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TranslationRecognizer, SpeechTranslationConfig, AudioConfig, ResultReason, } from 'microsoft-cognitiveservices-speech-sdk';
+import { TranslationRecognizer, SpeechTranslationConfig, AudioConfig, ResultReason, TranslationRecognitionEventArgs, } from 'microsoft-cognitiveservices-speech-sdk';
 
 // import Select from 'react-select';
 
@@ -33,16 +33,12 @@ class Transcript extends React.Component {
             chinese_simp: {label: '普通话', recogKey: 'zh-CN', transKey: 'zh-Hans'},
         };
 
-
-        // ANOTHER APPROACH
-        // const backgroundlang = 'ar-EG';
-        // const recoglang = 'en-US';
-        this.defaultRecog = 'es-MX';
-        console.log("testing", this.languageOptions["english_us"]);
-        this.defaultTranslate = 'en-US';
+        this.defaultRecog = this.languageOptions.english_us;
+        console.log("testing", this.languageOptions["english_us"]); // WORKS!
+        this.defaultTranslate = this.languageOptions.spanish_mx;
         const translation_config = SpeechTranslationConfig.fromSubscription(this.subscriptionKey, this.region);
-        translation_config.speechRecognitionLanguage = this.defaultRecog;
-        translation_config.addTargetLanguage(this.defaultTranslate); 
+        translation_config.speechRecognitionLanguage = this.defaultRecog.recogKey;
+        translation_config.addTargetLanguage(this.defaultTranslate.recogKey); 
         const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
         // const audioConfig = AudioConfig.fromWavFileInput("../../backend/TransLang/DemoAudios/good spanish/1-spanish.wav");
 
@@ -51,10 +47,10 @@ class Transcript extends React.Component {
         // TODO: add common phrases (for better recog)
 
         this.state = {
-            transcripts: {
-                backgroundlang: [],
-                recoglang: []
-            },
+            transcripts: [
+                {language: this.defaultRecog, scripts: []},
+                {language: this.defaultTranslate, scripts: []},
+            ],
             currentViewingLanguage: this.defaultRecog,
             gotFinal: false,
             trecognizer: trecognizer,
@@ -68,15 +64,41 @@ class Transcript extends React.Component {
 
     init_trecognizer(recoglang = this.defaultRecog, backgroundlang = this.defaultTranslate) {
         const translation_config = SpeechTranslationConfig.fromSubscription(this.subscriptionKey, this.region);
-        translation_config.speechRecognitionLanguage = recoglang;
-        translation_config.addTargetLanguage(backgroundlang)
+        translation_config.speechRecognitionLanguage = recoglang.recogKey;
+        translation_config.addTargetLanguage(backgroundlang.recogKey)
         const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
         const trecognizer = new TranslationRecognizer(translation_config, audioConfig);
         this.setState({
-            backgroundlang: backgroundlang,
             recoglang: recoglang,
+            backgroundlang: backgroundlang,
             trecognizer: trecognizer,
         });
+    }
+
+    /**
+     * 
+     * @param {TranslationRecognitionEventArgs} e
+     * @param {Boolean}  popLast
+     */
+    updateTranscripts(e, popLast) {
+        console.log("test call");
+        const recogText = e.result.text;
+        var i; 
+        var transcripts = this.state.transcripts.slice();
+        for (i = 0; i < transcripts.length; i++) {
+            if (popLast) {
+                transcripts[i].scripts.pop();
+            }
+            if (transcripts[i].language.label === this.state.recoglang.label) {
+                transcripts[i].scripts.push(recogText);
+            }
+            else { // get translated version and pust
+                const currTransKey = transcripts[i].language.transKey;
+                const transText = e.result.translations.get(currTransKey);
+                transcripts[i].scripts.push(transText);
+            }
+        }
+        return transcripts;
     }
 
     translate_recognize() {
@@ -85,100 +107,29 @@ class Transcript extends React.Component {
         recognizer.recognizing = (s, e) => {
             console.log("RECOGNIZING");
             const recognizing = e.result.text;
-            // console.log(recognizing);
-            // console.log("translations");
-            const translations = e.result.privTranslations.privMap;
-            // const language = translations.privKeys[0];
-            // console.log(language, translation);
-            // console.log(e.result.privTranslations.privMap);
-            if (recognizing == "") { return; } // don't add empty recognized
-            // console.log("RECOGNIZING");
-            var origs;
-            var backs;
-            var recogOrig;
-            var recogBack;
-            recogOrig = e.result.text;
-            recogBack = translations.privValues;
-            recogBack = recogBack[recogBack.length - 1];
-            if (this.state.switched_recoglang === false) {
-                origs = this.state.transcripts.recoglang.slice();
-                backs = this.state.transcripts.backgroundlang.slice();
-                
-            }
-            else {
-                origs = this.state.transcripts.backgroundlang.slice();
-                backs = this.state.transcripts.recoglang.slice();
-                // recogOrig = translations.privValues
-                // recogOrig = recogOrig[recogOrig.length - 1];
-                // recogBack = e.result.text;
-            }
-            console.log("gets here");
-            if (this.state.gotFinal == false) {
-                // en_transcripts.pop();
-                origs.pop();
-                backs.pop();
-            }
-            // console.log("origs");
-            // console.log(origs);
-            // console.log("recogorig");
-            // console.log(recogOrig);
+            const popLast = (this.state.gotFinal === false) ? true : false;
+            const newTranscripts = this.updateTranscripts(e, popLast);
+
             this.setState({
-                transcripts: {
-                    backgroundlang: backs.concat([recogBack]),
-                    recoglang: origs.concat([recogOrig]),
-                },
-                gotFinal: false,
+                transcripts: newTranscripts,
+                gotFinal : false,
             });
         }; 
         // recognizer.recognized = this.recognized_callback;
         recognizer.recognized = (s, e) => {
             console.log("RECOGNIZED");
             const recognized = e.result.text;
-            // console.log(recognized);
-            // console.log("translations");
-            const translations = e.result.privTranslations.privMap;
-            var language = translations.privKeys;
-            language = language[language.length - 1];
-            var translation = translations.privValues;
-            translation = translation[translation.length - 1];
-            // console.log(language, translation);
-            if (recognized == ""){ return; } // don't add empty recognized 
-            var origs;
-            var backs;
-            var recogOrig;
-            var recogBack;
-            recogOrig = e.result.text;
-            recogBack = translations.privValues;
-            recogBack = recogBack[recogBack.length - 1];
-            if (this.state.switched_recoglang === false) {
-                origs = this.state.transcripts.recoglang.slice();
-                backs = this.state.transcripts.backgroundlang.slice();
-                
-            }
-            else {
-                origs = this.state.transcripts.backgroundlang.slice();
-                backs = this.state.transcripts.recoglang.slice();
-                // recogOrig = translations.privValues
-                // recogOrig = recogOrig[recogOrig.length - 1];
-                // recogBack = e.result.text;
-            }
-            if (this.state.gotFinal == false) {
-                // en_transcripts.pop();
-                origs.pop();
-                backs.pop();
-            }
+            const popLast = (this.state.gotFinal === false) ? true : false;
+            const newTranscripts = this.updateTranscripts(e, popLast);
+
             this.setState({
-                transcripts: {
-                    backgroundlang: backs.concat([recogBack]),
-                    recoglang: origs.concat([recogOrig]),
-                },
-                gotFinal: true,
+                transcripts : newTranscripts,
+                gotFinal : true,
             });
 
             // TODO: async call function to send transcripts to server
         };
         recognizer.startContinuousRecognitionAsync();
-        // recognizer.recognizeOnceAsync();
     }
 
     stop_translating() {
@@ -221,8 +172,8 @@ class Transcript extends React.Component {
         });
     }
 
-    switch_currentViewingLanguage() {
-        const newLang = (this.state.currentViewingLanguage === this.defaultTranslate) ? this.defaultRecog: this.defaultTranslate;
+    switch_currentViewingLanguage() { // TODO: only works with two languages. with multiple there should be buttons 
+        const newLang = (this.state.currentViewingLanguage === this.state.recoglang) ? this.state.backgroundlang: this.state.recoglang;
         this.setState({
             currentViewingLanguage: newLang,
         });
@@ -231,7 +182,7 @@ class Transcript extends React.Component {
     toggle_recoglang() {
         const freezeRecogState = this.state.recognizingCurrently;
         // console.log("Freeze", freezeRecogState);
-        if (freezeRecogState) {
+        if (freezeRecogState) { // DOESN'T WORK AS INTENDED
             this.toggle_recognizing();
         }
         const defaultorig = this.defaultRecog;
@@ -248,9 +199,25 @@ class Transcript extends React.Component {
             switched_recoglang: switched,
         });
         // console.log("Freeze", freezeRecogState);
-        if (freezeRecogState) {
+        if (freezeRecogState) { // DOESN'T WORK - doesn't toggle on recording
             this.toggle_recognizing();
         }
+    }
+
+    /**
+     * 
+     * @param {} lang ex: {label: 'English (US)', recogKey: 'en-US', transKey: 'en'}
+     */
+    get_specified_scripts(lang) {
+        const transcripts = this.state.transcripts;
+        var i;
+        for (i = 0; i < transcripts.length; i++) {
+            if (transcripts[i].language.label === lang.label) {
+                const found = transcripts[i].scripts.slice();
+                return found;
+            }
+        }
+        return null;
     }
 
     render() {
@@ -258,23 +225,26 @@ class Transcript extends React.Component {
         var origs;
         var backs;
         const symbol = this.state.currentViewingLanguage;
-        const viewinglanguage = (symbol !== this.defaultTranslate) ? "عربى" : "English";
+        const viewinglanguage = (symbol === this.state.backgroundlang) ? this.state.recoglang.label : this.state.backgroundlang.label;
 
-        if (this.state.switched_recoglang === false) {
-            origs = this.state.transcripts.recoglang.slice();
-            // console.log("origs");
-            // console.log(origs);
-            backs = this.state.transcripts.backgroundlang.slice();
-        }
-        else {
-            origs = this.state.transcripts.backgroundlang.slice();
-            backs = this.state.transcripts.recoglang.slice();
-        }
-        // console.log("transcripts");
-        // console.log(origs);
+        console.log(this.state.transcripts)
+
+        // if (this.state.switched_recoglang === false) {
+        //     origs = this.state.transcripts.recoglang.slice();
+        //     // console.log("origs");
+        //     // console.log(origs);
+        //     backs = this.state.transcripts.backgroundlang.slice();
+        // }
+        // else {
+        //     origs = this.state.transcripts.backgroundlang.slice();
+        //     backs = this.state.transcripts.recoglang.slice();
+        // }
+        // // console.log("transcripts");
+        // // console.log(origs);
         
-        const words = (symbol === this.defaultTranslate) ? backs : origs;
+        // const words = (symbol === this.defaultTranslate) ? backs : origs;
 
+        const words = this.get_specified_scripts(symbol);
         const wordsOut = words.map((step, move) => {
             return (
                 <a key={move}>
@@ -320,7 +290,7 @@ class Transcript extends React.Component {
                         {viewinglanguage}
                     </button>
                     <button disabled onClick={() => this.toggle_recoglang()}>
-                        🎤 in {this.state.recoglang}
+                        🎤 in {this.state.recoglang.label}
                     </button>
                 </div>
                 <br></br>
