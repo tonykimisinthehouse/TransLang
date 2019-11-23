@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TranslationRecognizer, SpeechTranslationConfig, AudioConfig, } from 'microsoft-cognitiveservices-speech-sdk';
+import { TranslationRecognizer, SpeechTranslationConfig, AudioConfig, TranslationRecognitionEventArgs} from 'microsoft-cognitiveservices-speech-sdk';
 
 // import Select from 'react-select';
 
@@ -37,7 +37,8 @@ class Transcript extends React.Component {
 
         this.defaultRecog = this.languageOptions.english_us;
         console.log("testing", this.languageOptions["english_us"]); // WORKS!
-        this.defaultTranslate = this.languageOptions.spanish_mx;
+        // this.defaultTranslate = this.languageOptions.spanish_mx;
+        this.defaultTranslate = this.languageOptions.korean;
         const translation_config = SpeechTranslationConfig.fromSubscription(this.subscriptionKey, this.region);
         translation_config.speechRecognitionLanguage = this.defaultRecog.recogKey;
         translation_config.addTargetLanguage(this.defaultTranslate.recogKey); 
@@ -74,6 +75,7 @@ class Transcript extends React.Component {
             recoglang: recoglang,
             backgroundlang: backgroundlang,
             trecognizer: trecognizer,
+            switched_recoglang: !this.state.switched_recoglang,
         });
     }
 
@@ -179,25 +181,23 @@ class Transcript extends React.Component {
         });
     }
 
+    /**
+     * WARNING: switching while recognizing doesn't work yet (couldn't stop and start automatically)
+     *      so for now just stops and switches listening lang but thats it
+     */
     toggle_recoglang() {
         const freezeRecogState = this.state.recognizingCurrently;
         // console.log("Freeze", freezeRecogState);
-        if (freezeRecogState) { // DOESN'T WORK AS INTENDED
+        if (freezeRecogState) { // DOESN'T WORK AS INTENDED 
             this.toggle_recognizing();
         }
         const defaultorig = this.defaultRecog;
         const defaultback = this.defaultTranslate;
         var switched = false;
-        if (this.state.recoglang === defaultorig) {
-            this.init_trecognizer(defaultback, defaultorig);
-            switched = true;
-        } else {
-            this.init_trecognizer();
-            switched = false; // switched back
-        }
-        this.setState({
-            switched_recoglang: switched,
-        });
+        const newRecog = this.state.backgroundlang;
+        const newBack = this.state.recoglang;
+        this.init_trecognizer(newRecog, newBack);
+
         // console.log("Freeze", freezeRecogState);
         if (freezeRecogState) { // DOESN'T WORK - doesn't toggle on recording
             this.toggle_recognizing();
@@ -225,7 +225,8 @@ class Transcript extends React.Component {
         const symbol = this.state.currentViewingLanguage;
         const viewinglanguage = (symbol === this.state.backgroundlang) ? this.state.recoglang.label : this.state.backgroundlang.label;
 
-        console.log(this.state.transcripts)
+        console.log("----------------transcripts----------------");
+        console.log(this.state.transcripts);
 
         const words = this.get_specified_scripts(symbol);
         const wordsOut = words.map((step, move) => {
@@ -240,7 +241,6 @@ class Transcript extends React.Component {
         // return <div className="Container">hello</div>;
 
         // fancy react scroll: https://www.npmjs.com/package/react-scroll (future)
-
         {/* <Dropdown
             placeholder="Languages"
             fluid
@@ -272,7 +272,7 @@ class Transcript extends React.Component {
                     <button onClick={() => this.switch_currentViewingLanguage()}>
                         {viewinglanguage}
                     </button>
-                    <button disabled onClick={() => this.toggle_recoglang()}>
+                    <button onClick={() => this.toggle_recoglang()}>
                         <Emoji symbol="🎤" /> in {this.state.recoglang.label}
                     </button>
                 </div>
