@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TranslationRecognizer, SpeechTranslationConfig, AudioConfig, TranslationRecognitionEventArgs} from 'microsoft-cognitiveservices-speech-sdk';
+import { TranslationRecognizer, SpeechTranslationConfig, AudioConfig, TranslationRecognitionEventArgs, PhraseListGrammar} from 'microsoft-cognitiveservices-speech-sdk';
 
 // import Select from 'react-select';
 
@@ -35,10 +35,12 @@ class Transcript extends React.Component {
             chinese_simp: {label: '普通话', recogKey: 'zh-CN', transKey: 'zh-Hans'},
         };
 
+        this.defaultTranslate = this.languageOptions.spanish_mx;
+
         this.defaultRecog = this.languageOptions.english_us;
         console.log("testing", this.languageOptions["english_us"]); // WORKS!
         // this.defaultTranslate = this.languageOptions.spanish_mx;
-        this.defaultTranslate = this.languageOptions.korean;
+        
         const translation_config = SpeechTranslationConfig.fromSubscription(this.subscriptionKey, this.region);
         translation_config.speechRecognitionLanguage = this.defaultRecog.recogKey;
         translation_config.addTargetLanguage(this.defaultTranslate.recogKey); 
@@ -48,6 +50,8 @@ class Transcript extends React.Component {
         const trecognizer = new TranslationRecognizer(translation_config, audioConfig);
         
         // TODO: add common phrases (for better recog)
+        var phraseListGrammar = PhraseListGrammar.fromRecognizer(trecognizer);
+        phraseListGrammar.addPhrase("Hello, my name is Haard");
 
         this.state = {
             transcripts: [
