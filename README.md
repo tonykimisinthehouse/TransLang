@@ -72,7 +72,7 @@ Other (*currently*) supported languages:
 
 Idea: As soon as users connect and begin collaborating. They will trace the code line by line while talking to each other. This will make sure that students have closely looked at how the code will execute. It is similar to python turtle, as users have to become the dot and imagine which line the computer will run next.
 
-![](frontend/images/tracing.mov)
+![](frontend/images/tracing.gif)
 
 ### Rooms 
 
