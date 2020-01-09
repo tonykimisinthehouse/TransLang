@@ -1,7 +1,9 @@
 # PopLang
-> Utilize your entire language repertoire!
+> *Utilize your entire language repertoire!*
 
-Check out the [video demo](https://youtu.be/KQ0D13wMkHY)!
+### Check out the [video demo](https://youtu.be/KQ0D13wMkHY)!
+[![IMAGE ALT TEXT HERE](poplang.png)](https://youtu.be/KQ0D13wMkHY)
+
 
 ## Dependencies to run the app locally
 - Node.js
